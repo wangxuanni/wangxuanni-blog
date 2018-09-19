@@ -455,7 +455,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/18/css/" itemprop="url">CSS</a></h1>
+                <a class="post-title-link" href="/2018/09/18/css/" itemprop="url">CSS总结（更新中）</a></h1>
         
 
         <div class="post-meta">
@@ -521,7 +521,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  973
+                  1.1k
                 </span>
               
 
@@ -559,36 +559,14 @@
 
       
         
-          
-            <p>#静态网页常用代码<br>1.如何将网页整体居中？<br>将整个网页放在一个大div下，大div设置margin和具体宽度<br><code>&lt;div style=&quot;margin: 0 auto;width:1000px;&quot;&gt;</code></p>
-<p>2.如何消除默认样式？<br><code>2.&lt;body style=&quot;margin:0;padding:0;&quot;&gt;</code></p>
-<p>3.如何隐藏滚动条？</p>
-<ul>
-<li><p>方法一html { overflow-y: scroll; }<br> 原理：强制显示ie的垂直滚动条，而忽略水平滚动条<br> 优点：完全解决了这个问题, 允许你保持完整的XHTML doctype.<br> 缺点：即使页面不需要垂直滚动条的时候也会出现垂直滚动条。</p>
-</li>
-<li><p>方法2:html { overflow-x: hidden; overflow-y: auto; }<br> 原理：隐藏横向滚动，垂直滚动根据内容自适应<br> 优点：在视觉上解决了这个问题.在不必要的时候, 未强制垂直滚动条出现.<br> 缺点：只是隐藏了水平滚动条，如果页面真正需要水平滚动条的时候，<br> 屏幕以外的内容会因为用户无法水平滚动，而看不到。<br>4.常用代码，搁这了，方便复制。<br>清除一些默认样式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">*&#123;margin:0;padding:0;&#125;</span><br><span class="line">body&#123;font-size:12px;&#125;</span><br><span class="line">img&#123;border:none;&#125;</span><br><span class="line">li&#123;list-style:none;&#125;</span><br><span class="line">input,select,textarea&#123;outline:none;&#125;</span><br><span class="line">textarea&#123;resize:none;&#125;</span><br><span class="line">a&#123;text-decoration:none;&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>刚开始肯定就是刷刷几个div包起来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div class=&quot;&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div class=&quot;&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
-<p>Bootstrap框架引用代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;http://how2j.cn/study/js/jquery/2.0.0/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;link href=&quot;http://how2j.cn/study/css/bootstrap/3.3.6/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;script src=&quot;http://how2j.cn/study/js/bootstrap/3.3.6/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>#css的三种写处</p>
-<p>##内联式<br><code>style=&quot;color:red;&quot;</code></p>
-<p>##嵌入式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"></span><br><span class="line"> &lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
-<p>##外部式<br>css外部式<br><code>&lt;link href=&quot;css/style.css&quot; rel=&quot;stylesheet&quot;&gt;</code></p>
-<p>js外部式<br><code>&lt;script type=&quot;text/javascript&quot; src=&quot;js/jquery-1.8.3.min.js&quot;&gt;&lt;/script&gt;</code></p>
-<p>##优先级：内联式 &gt; 嵌入式 &gt; 外部式<br>其实总结来说，就是–就近原则（离被设置元素越近优先级别越高）。</p>
-<p>#选择器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">p&#123; color:red;&#125;/*元素选择器*/</span><br><span class="line"></span><br><span class="line">#p1&#123;color:blue;&#125;/*id选择器*/</span><br><span class="line"></span><br><span class="line">.after&#123;color:green; &#125;/*类选择器*/</span><br><span class="line"></span><br><span class="line">*&#123;color:red;&#125;/*通用选择器*/</span><br><span class="line"></span><br><span class="line">a:hover&#123;color:red;&#125;/*伪类选择器*/</span><br><span class="line"></span><br><span class="line"> h1,span&#123;color:red;&#125;/*两个都*/</span><br></pre></td></tr></table></figure></p>
-<p>选择官方参考手册<a href="http://www.w3school.com.cn/cssref/css_selectors.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/cssref/css_selectors.asp</a></p>
-<p>!important 注意要写在分号的前面，比如</p>
-<p>#布局<br>这个慕课老师发了许多关于布局的课程，其中一些给人启发<br><a href="http://www.imooc.com/t/197450" target="_blank" rel="noopener">http://www.imooc.com/t/197450</a></p>
-<p>常用的块状元素有：<br><code>&lt;div&gt;、&lt;p&gt;、&lt;h1&gt;、&lt;h6&gt;、&lt;ol&gt;、&lt;ul&gt;、&lt;dl&gt;、&lt;table&gt;、&lt;address&gt;、&lt;blockquote&gt; 、&lt;form&gt;</code><br>块级元素特点：<br>1、每个块级元素都从新的一行开始，并且其后的元素也另起一行。（真霸道，一个块级元素独占一行）<br>2、元素的高度、宽度、行高以及顶和底边距都可设置。<br>3、元素宽度在不设置的情况下，是它本身父容器的100%（和父元素的宽度一致），除非设定一个宽度</p>
-<p>常用的内联元素有：<br><code>&lt;a&gt;、&lt;span&gt;、&lt;br&gt;、&lt;i&gt;、&lt;em&gt;、&lt;strong&gt;、&lt;label&gt;、&lt;q&gt;、&lt;var&gt;、&lt;cite&gt;、&lt;code&gt;</code><br>内联元素特点：<br>1、和其他元素都在一行上；<br>2、元素的高度、宽度及顶部和底部边距不可设置；<br>3、元素的宽度就是它包含的文字或图片的宽度，不可改变</p>
-<p>常用的内联块状元素有：<br><code>&lt;img&gt;、&lt;input&gt;</code></p>
-<p>inline-block 元素特点：<br>1、和其他元素都在一行上；<br>2、元素的高度、宽度、行高以及顶和底边距都可设置。</p>
-<p>#表格</p>
-
-          
+          <p>前两天帮人做静态网站，发现自己很多基础都忘了。写个博文总结一下。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/18/css/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -762,183 +740,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/09/08/《冬牧场》/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/《华杉讲透孙子兵法》/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zakree">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zakree's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/08/《华杉讲透孙子兵法》/" itemprop="url">《华杉讲透孙子兵法》</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-08T14:00:50+08:00">
-                2018-09-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">读书笔记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6min
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>孙子兵法再神也毕竟是几千年前写的了。这本书是借孙子兵法讲现代的公司管理，商战。最重要的是，他讲的是正确的、有道理。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/08/《华杉讲透孙子兵法》/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1166,6 +967,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/数据结构读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zakree">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zakree's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/08/数据结构读书笔记/" itemprop="url">数据结构读书笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-08T14:00:50+08:00">
+                2018-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3min
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><img src="http://pew0qm6og.bkt.clouddn.com/s9031327.jpg" alt="《数据结构java语言描述》作者Michael Main"><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/08/数据结构读书笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/《自卑与超越》/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1343,7 +1321,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/数据结构读书笔记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/《华杉讲透孙子兵法》/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zakree">
@@ -1362,7 +1340,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/08/数据结构读书笔记/" itemprop="url">数据结构读书笔记</a></h1>
+                <a class="post-title-link" href="/2018/09/08/《华杉讲透孙子兵法》/" itemprop="url">《华杉讲透孙子兵法》</a></h1>
         
 
         <div class="post-meta">
@@ -1428,7 +1406,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1k
+                  2k
                 </span>
               
 
@@ -1444,7 +1422,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3min
+                  6min
                 </span>
               
             </div>
@@ -1466,10 +1444,10 @@
 
       
         
-          <p><img src="http://pew0qm6og.bkt.clouddn.com/s9031327.jpg" alt="《数据结构java语言描述》作者Michael Main"><br>
+          <p>孙子兵法再神也毕竟是几千年前写的了。这本书是借孙子兵法讲现代的公司管理，商战。最重要的是，他讲的是正确的、有道理。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/08/数据结构读书笔记/#more" rel="contents">
+            <a class="btn" href="/2018/09/08/《华杉讲透孙子兵法》/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
