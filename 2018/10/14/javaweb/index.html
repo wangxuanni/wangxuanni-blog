@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="Zakree&#39;s blog">
 <meta property="og:description" content="查漏补缺五部曲之四">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-14T13:53:12.859Z">
+<meta property="og:updated_time" content="2018-10-14T13:56:17.520Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java web">
 <meta name="twitter:description" content="查漏补缺五部曲之四">
@@ -149,7 +149,7 @@
 
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
-<a href="https://github.com/needroot"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+<a href="https://github.com/zakree"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
@@ -447,13 +447,13 @@
 <h2 id="servlet和jsp"><a href="#servlet和jsp" class="headerlink" title="servlet和jsp"></a>servlet和jsp</h2><p>jsp就是在html里面写java代码，servlet就是在java里面写html代码</p>
 <p>jsp更注重前端显示，servlet更注重模型和业务逻辑</p>
 <p>jsp经过容器解释之后就是一个servlet类.<br>我们说HelloServlet是一个Servlet，不是因为它的类名里有一个”Servlet”，而是因为它继承了 HttpServlet<br>打开转译hello.jsp 后得到的hello_jsp.java，可以发现它继承了类HttpJspBase，而HttpJspBase 继承了HttpServlet<br>所以我们说hello_.jsp.java 是一个Servlet</p>
-<h1 id="JSP"><a href="#JSP" class="headerlink" title="JSP"></a>JSP</h1><h2 id="页面元素"><a href="#页面元素" class="headerlink" title="页面元素"></a>页面元素</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">1. 静态内容</span><br><span class="line">就是html,css,javascript等内容</span><br><span class="line">2. 指令</span><br><span class="line">以&lt;%@开始 %&gt; 结尾，比如&lt;%@page import=&quot;java.util.*&quot;%&gt;</span><br><span class="line">3. 表达式 &lt;%=%&gt;</span><br><span class="line"></span><br><span class="line">4. Scriptlet</span><br><span class="line">在&lt;%%&gt; 之间，可以写任何java 代码</span><br><span class="line">5. 声明</span><br><span class="line">在&lt;%!%&gt; 之间可以声明字段或者方法。但是不建议这么做。</span><br><span class="line">6. 动作</span><br><span class="line">&lt;jsp:include page=&quot;Filename&quot; &gt; 在jsp页面中包含另一个页面。在包含的章节有详细的讲解</span><br><span class="line">7. 注释 &lt;%-- -- %&gt;</span><br><span class="line">不同于 html的注释 &lt;!-- --&gt; 通过jsp的注释，浏览器也看不到相应的代码，相当于在servlet中注释掉了</span><br><span class="line">8. 表达式</span><br><span class="line">用于输出一段html，比如&lt;%=&quot;hello jsp&quot;%&gt;相当于&lt;%out.println(&quot;hello jsp&quot;);%&gt;</span><br><span class="line">再比如</span><br><span class="line">&lt;%for (String word : words) &#123;%&gt;</span><br><span class="line">&lt;tr&gt;</span><br><span class="line">    &lt;td&gt;&lt;%=word%&gt;&lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br><span class="line">&lt;%&#125;%&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="JSP"><a href="#JSP" class="headerlink" title="JSP"></a>JSP</h1><h2 id="页面元素"><a href="#页面元素" class="headerlink" title="页面元素"></a>页面元素</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">1. 静态内容</span><br><span class="line">就是html,css,javascript等内容</span><br><span class="line">2. 指令</span><br><span class="line">以&lt;%@开始 %&gt; 结尾，比如&lt;%@page import=&quot;java.util.*&quot;%&gt;</span><br><span class="line">3. 表达式 &lt;%=%&gt;</span><br><span class="line">4. Scriptlet</span><br><span class="line">在&lt;%%&gt; 之间，可以写任何java 代码</span><br><span class="line">5. 声明</span><br><span class="line">在&lt;%!%&gt; 之间可以声明字段或者方法。但是不建议这么做。</span><br><span class="line">6. 动作</span><br><span class="line">&lt;jsp:include page=&quot;Filename&quot; &gt; 在jsp页面中包含另一个页面。在包含的章节有详细的讲解</span><br><span class="line">7. 注释 &lt;%-- -- %&gt;</span><br><span class="line">不同于 html的注释 &lt;!-- --&gt; 通过jsp的注释，浏览器也看不到相应的代码，相当于在servlet中注释掉了</span><br><span class="line"></span><br><span class="line">8. 表达式</span><br><span class="line">用于输出一段html，比如&lt;%=&quot;hello jsp&quot;%&gt;相当于&lt;%out.println(&quot;hello jsp&quot;);%&gt;</span><br><span class="line">再比如</span><br><span class="line">&lt;%for (String word : words) &#123;%&gt;</span><br><span class="line">&lt;tr&gt;</span><br><span class="line">    &lt;td&gt;&lt;%=word%&gt;&lt;/td&gt;</span><br><span class="line">&lt;/tr&gt;</span><br><span class="line">&lt;%&#125;%&gt;</span><br></pre></td></tr></table></figure>
 <h2 id="九大内置对象"><a href="#九大内置对象" class="headerlink" title="九大内置对象"></a>九大内置对象</h2><p>request,response,out</p>
 <p>pageContext, session,application作用域：页面、用户、全局</p>
 <p>page,config,exception</p>
 <p>使用javabean</p>
-<h1 id="session"><a href="#session" class="headerlink" title="session"></a>session</h1><p>设置<br><code>session.getAttribute(&quot;name&quot;);</code><br>取得(比如说在另一个页面)<br><code>String name = (String)session.getAttribute(&quot;name&quot;);</code></p>
-<h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//创健</span><br><span class="line">`Cookie u= new Cookie(&quot;username&quot;,username);键，值对的关系存储`</span><br><span class="line">//设置生存时间</span><br><span class="line">`u.setMaxAge(864000);`</span><br><span class="line">//保存 </span><br><span class="line">`response.addCookie(u);`</span><br><span class="line"></span><br><span class="line">//把所有cookie取出来装入数组 Cookie[] cookies = request.getCookies();</span><br><span class="line">if(c.getName().equals(&quot;username&quot;)||c.getName().equals(&quot;password&quot;))</span><br><span class="line">  &#123;c.setMaxAge(0); //设置Cookie失效</span><br><span class="line">  response.addCookie(c); //重新保存。</span><br><span class="line"></span><br><span class="line">//取键 </span><br><span class="line">if(c.getName().equals(&quot;username&quot;))</span><br><span class="line"> </span><br><span class="line">//取值</span><br><span class="line">username = URLDecoder.decode(c.getValue(),&quot;utf-8&quot;);</span><br></pre></td></tr></table></figure>
+<h1 id="session"><a href="#session" class="headerlink" title="session"></a>session</h1><p>设置<br><code>session.getAttribute(&quot;name&quot;);</code><br>取得<br><code>String name = (String)session.getAttribute(&quot;name&quot;);</code></p>
+<h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//创健</span><br><span class="line">Cookie u= new Cookie(&quot;username&quot;,username);键，值对的关系存储`</span><br><span class="line">//设置生存时间</span><br><span class="line">u.setMaxAge(864000);`</span><br><span class="line">//保存 </span><br><span class="line">response.addCookie(u);`</span><br><span class="line"></span><br><span class="line">//把所有cookie取出来装入数组 Cookie[] cookies = request.getCookies();</span><br><span class="line">if(c.getName().equals(&quot;username&quot;)||c.getName().equals(&quot;password&quot;))</span><br><span class="line">  &#123;c.setMaxAge(0); //设置Cookie失效</span><br><span class="line">  response.addCookie(c); //重新保存。</span><br><span class="line"></span><br><span class="line">//取键 </span><br><span class="line">if(c.getName().equals(&quot;username&quot;))</span><br><span class="line"> </span><br><span class="line">//取值</span><br><span class="line">username = URLDecoder.decode(c.getValue(),&quot;utf-8&quot;);</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -477,8 +477,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/14/框架/" rel="next" title="java框架">
-                <i class="fa fa-chevron-left"></i> java框架
+              <a href="/2018/10/10/javaSE下/" rel="next" title="javaSE（下）">
+                <i class="fa fa-chevron-left"></i> javaSE（下）
               </a>
             
           </div>
@@ -486,6 +486,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/14/框架/" rel="prev" title="java框架">
+                java框架 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -612,7 +616,7 @@
 
           
           
-<div class="aplayer" data-id="559875171" data-server="netease" data-type="song" data-autoplay="false"></div>
+
           
 
         </div>
