@@ -81,17 +81,17 @@
 
 
 
-<meta name="description" content="查漏补缺五部曲之四">
+<meta name="description" content="javabean、servlet、jsp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java web">
+<meta property="og:title" content="javaEE">
 <meta property="og:url" content="http://yoursite.com/2018/10/14/javaweb/index.html">
 <meta property="og:site_name" content="Zakree&#39;s blog">
-<meta property="og:description" content="查漏补缺五部曲之四">
+<meta property="og:description" content="javabean、servlet、jsp">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-23T03:48:59.705Z">
+<meta property="og:updated_time" content="2018-12-28T11:22:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java web">
-<meta name="twitter:description" content="查漏补缺五部曲之四">
+<meta name="twitter:title" content="javaEE">
+<meta name="twitter:description" content="javabean、servlet、jsp">
 
 
 
@@ -127,7 +127,7 @@
 
 
 
-  <title>java web | Zakree's blog</title>
+  <title>javaEE | Zakree's blog</title>
   
 
 
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">java web</h1>
+          <h1 class="post-title" itemprop="name headline">javaEE</h1>
         
 
         <div class="post-meta">
@@ -378,7 +378,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.3k
+                  1.4k
                 </span>
               
 
@@ -402,7 +402,7 @@
 
           
               <div class="post-description">
-                  查漏补缺五部曲之四
+                  javabean、servlet、jsp
               </div>
           
 
@@ -419,7 +419,8 @@
       
 
       
-        <h1 id="servlet"><a href="#servlet" class="headerlink" title="servlet"></a>servlet</h1><h2 id="写一个servlet"><a href="#写一个servlet" class="headerlink" title="写一个servlet"></a>写一个servlet</h2><p>第一步：html表单提交请求<br><code>&lt;form action=&quot;login&quot; method=&quot;post&quot;&gt;</code></p>
+        <h1 id="javabean"><a href="#javabean" class="headerlink" title="javabean"></a>javabean</h1><p>三要素<br>1.一个无参的构造函数<br>2.属性私有化。<br>3.get、set的方法。私有化的属性必须通过public类型的方法给其它程序，并且方法的命名也必须遵守一定的命名规范。</p>
+<h1 id="servlet"><a href="#servlet" class="headerlink" title="servlet"></a>servlet</h1><h2 id="写一个servlet"><a href="#写一个servlet" class="headerlink" title="写一个servlet"></a>写一个servlet</h2><p>第一步：html表单提交请求<br><code>&lt;form action=&quot;login&quot; method=&quot;post&quot;&gt;</code></p>
 <p>第二步：servlet类中的请求处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public class LoginServlet extends HttpServlet &#123;</span><br><span class="line">    protected void doPost(HttpServletRequest request, HttpServletResponse response)</span><br></pre></td></tr></table></figure></p>
 <p>第三步：配置web.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet-name&gt;L1&lt;/servlet-name&gt;//类的缩写</span><br><span class="line">    &lt;servlet-class&gt;Myservlet.LoginServlet&lt;/servlet-class&gt;//类的名称</span><br><span class="line">&lt;/servlet&gt;</span><br><span class="line"></span><br><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;L1&lt;/servlet-name&gt;//类的缩写，和上面一致就行</span><br><span class="line">    &lt;url-pattern&gt;/login&lt;/url-pattern&gt;//映射为的url地址，注意有“/”。对应&lt;form action=&quot;login&quot;</span><br><span class="line">&lt;/servlet-mapping&gt;</span><br></pre></td></tr></table></figure></p>
 <h2 id="处理请求的三种方法"><a href="#处理请求的三种方法" class="headerlink" title="处理请求的三种方法"></a>处理请求的三种方法</h2><p>1、dopost、doget、service<br>doget：是默认方法，比如超链访问、地址栏直接输入某个地址。<br>特点：1.不安全，提交数据会在浏览器地址栏显示出来<br>2.不可以上传文件<br>3.有大小的限制</p>
@@ -570,7 +571,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -581,7 +582,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -632,7 +633,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#servlet"><span class="nav-number">1.</span> <span class="nav-text">servlet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#写一个servlet"><span class="nav-number">1.1.</span> <span class="nav-text">写一个servlet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理请求的三种方法"><span class="nav-number">1.2.</span> <span class="nav-text">处理请求的三种方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#request和reponse常用方法"><span class="nav-number">1.3.</span> <span class="nav-text">request和reponse常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#request"><span class="nav-number">1.3.1.</span> <span class="nav-text">request</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reponse-待完善"><span class="nav-number">1.3.2.</span> <span class="nav-text">reponse(待完善)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务端跳转和客户端跳转"><span class="nav-number">1.4.</span> <span class="nav-text">服务端跳转和客户端跳转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中文问题"><span class="nav-number">1.5.</span> <span class="nav-text">中文问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取中文参数，只需三步"><span class="nav-number">1.5.1.</span> <span class="nav-text">获取中文参数，只需三步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#返回中文的响应"><span class="nav-number">1.5.2.</span> <span class="nav-text">返回中文的响应</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#servlet的一些概念"><span class="nav-number">1.6.</span> <span class="nav-text">servlet的一些概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期"><span class="nav-number">1.6.1.</span> <span class="nav-text">生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#servlet和jsp"><span class="nav-number">1.7.</span> <span class="nav-text">servlet和jsp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JSP"><span class="nav-number">2.</span> <span class="nav-text">JSP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#页面元素"><span class="nav-number">2.1.</span> <span class="nav-text">页面元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九大内置对象"><span class="nav-number">2.2.</span> <span class="nav-text">九大内置对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#session"><span class="nav-number">3.</span> <span class="nav-text">session</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cookie"><span class="nav-number">4.</span> <span class="nav-text">Cookie</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#javabean"><span class="nav-number">1.</span> <span class="nav-text">javabean</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#servlet"><span class="nav-number">2.</span> <span class="nav-text">servlet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#写一个servlet"><span class="nav-number">2.1.</span> <span class="nav-text">写一个servlet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理请求的三种方法"><span class="nav-number">2.2.</span> <span class="nav-text">处理请求的三种方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#request和reponse常用方法"><span class="nav-number">2.3.</span> <span class="nav-text">request和reponse常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#request"><span class="nav-number">2.3.1.</span> <span class="nav-text">request</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reponse-待完善"><span class="nav-number">2.3.2.</span> <span class="nav-text">reponse(待完善)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务端跳转和客户端跳转"><span class="nav-number">2.4.</span> <span class="nav-text">服务端跳转和客户端跳转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中文问题"><span class="nav-number">2.5.</span> <span class="nav-text">中文问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取中文参数，只需三步"><span class="nav-number">2.5.1.</span> <span class="nav-text">获取中文参数，只需三步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#返回中文的响应"><span class="nav-number">2.5.2.</span> <span class="nav-text">返回中文的响应</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#servlet的一些概念"><span class="nav-number">2.6.</span> <span class="nav-text">servlet的一些概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期"><span class="nav-number">2.6.1.</span> <span class="nav-text">生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#servlet和jsp"><span class="nav-number">2.7.</span> <span class="nav-text">servlet和jsp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JSP"><span class="nav-number">3.</span> <span class="nav-text">JSP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#页面元素"><span class="nav-number">3.1.</span> <span class="nav-text">页面元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九大内置对象"><span class="nav-number">3.2.</span> <span class="nav-text">九大内置对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#session"><span class="nav-number">4.</span> <span class="nav-text">session</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cookie"><span class="nav-number">5.</span> <span class="nav-text">Cookie</span></a></li></ol></div>
             
 
           </div>
