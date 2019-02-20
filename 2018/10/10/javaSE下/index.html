@@ -81,17 +81,17 @@
 
 
 
-<meta name="description" content="关于java异常，多线程，IO，集合。">
+<meta name="description" content="关于java异常，IO，集合。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="javaSE（下）">
 <meta property="og:url" content="http://yoursite.com/2018/10/10/javaSE下/index.html">
 <meta property="og:site_name" content="Zakree&#39;s blog">
-<meta property="og:description" content="关于java异常，多线程，IO，集合。">
+<meta property="og:description" content="关于java异常，IO，集合。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-28T11:20:06.000Z">
+<meta property="og:updated_time" content="2019-02-20T14:40:01.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="javaSE（下）">
-<meta name="twitter:description" content="关于java异常，多线程，IO，集合。">
+<meta name="twitter:description" content="关于java异常，IO，集合。">
 
 
 
@@ -378,7 +378,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  519
+                  715
                 </span>
               
 
@@ -402,7 +402,7 @@
 
           
               <div class="post-description">
-                  关于java异常，多线程，IO，集合。
+                  关于java异常，IO，集合。
               </div>
           
 
@@ -419,7 +419,8 @@
       
 
       
-        <h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><p>try catch finally 没啥好说的。。。</p>
+        <h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><h2 id="当finally中有返回语句"><a href="#当finally中有返回语句" class="headerlink" title="当finally中有返回语句"></a>当finally中有返回语句</h2><p>当try和finally中都有有返回语句会执行哪一个？<br>请看下面代码，猜猜程序的运行结果是？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static int testFinally() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            return 1;</span><br><span class="line">        &#125; catch (Exception ex) &#123;</span><br><span class="line">            return 2;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            System.out.println(&quot;execute finally&quot;);</span><br><span class="line">            return 3;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int result = testFinally();</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>程序在执行try中遇到return语句时，会先将返回值储存到一个指定位置，然后执行finally代码块。（除非碰到exit(0)函数，就直接结束不执行finally）<br>如果finally里面有返回语句将会覆盖其它返回语句，最终执行finally的return语句，储存中的return语句被回收。<br>如果finally 没有返回语句，则执行完finally按储存中的return来。<br>因此运行结果是:execute finally 3</p>
 <h2 id="常见的runtime-exception-运行时异常-："><a href="#常见的runtime-exception-运行时异常-：" class="headerlink" title="常见的runtime exception(运行时异常)："></a>常见的runtime exception(运行时异常)：</h2><p>(不是必须进行try catch的异常 )<br>NullPointerException 空指针异常<br>ArithmeticException 算术异常，比如除数为零<br>ClassCastException 类型转换异常<br>ConcurrentModificationException 同步修改异常，遍历一个集合的时候，删除集合的元素，就会抛出该异常<br>IndexOutOfBoundsException 数组下标越界异常<br>NegativeArraySizeException 为数组分配的空间是负数异常</p>
 <h2 id="throw和throws的区别"><a href="#throw和throws的区别" class="headerlink" title="throw和throws的区别"></a>throw和throws的区别</h2><p>举个栗子<br>throw是语句抛出一个异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s = &quot;abc&quot;; </span><br><span class="line">if(s.equals(&quot;abc&quot;)) &#123; </span><br><span class="line">  throw new NumberFormatException(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>throws是方法可能抛出异常的声明<br><code>public static void function() throws NumberFormatException{</code></p>
@@ -430,7 +431,7 @@
 <li>Collection与Collections<br>Collection是所有集合类的根接口；<br>Collections是提供集合操作的工具类；常用方法如下<br>reverse    反转<br>shuffle    混淆<br>sort    排序<br>swap    交换（交换0和5下标的数据后）<code>Collections.swap(numbers,0,5);</code><br>rotate    滚动(把集合中的数据向右滚动2个单位)     <code>Collections.rotate(numbers,2);</code><br>synchronizedList    线程安全化</li>
 </ul>
 <h2 id="常用集合"><a href="#常用集合" class="headerlink" title="常用集合"></a>常用集合</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>代码展示ArrayList常用方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    List&lt;String&gt; animal = new ArrayList&lt;String&gt;();</span><br><span class="line">    //增</span><br><span class="line">    animal.add(&quot;松鼠&quot;);</span><br><span class="line">    animal.add(1, &quot;花猪&quot;);</span><br><span class="line">    //删</span><br><span class="line">    animal.remove(0);</span><br><span class="line">    animal.remove(&quot;花猪&quot;);</span><br><span class="line">    //查</span><br><span class="line">    System.out.println(animal.get(1));//根据位置获取对象</span><br><span class="line">    System.out.println(animal.indexOf(&quot;松鼠&quot;));//查对象的位置</span><br><span class="line">    //改</span><br><span class="line">    animal.set(0, &quot;猫&quot;);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    //获取大小</span><br><span class="line">    System.out.println(animal.size());</span><br><span class="line">    </span><br><span class="line">    //判断是否包含</span><br><span class="line">    System.out.println(animal.contains(&quot;小狗&quot;));</span><br><span class="line">    </span><br><span class="line">    //把另一个容器所有对象都加进来</span><br><span class="line">    ArrayList human = new ArrayList();</span><br><span class="line">    animal.addAll(human);</span><br><span class="line">    </span><br><span class="line">    //转为数组，类型要是一样的哦</span><br><span class="line">    String[] array = new String[animal.size()];</span><br><span class="line">    animal.toArray(array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="IO流（待完善）"><a href="#IO流（待完善）" class="headerlink" title="IO流（待完善）"></a>IO流（待完善）</h1><h1 id="多线程（待完善）"><a href="#多线程（待完善）" class="headerlink" title="多线程（待完善）"></a>多线程（待完善）</h1>
+<h1 id="IO流（待完善）"><a href="#IO流（待完善）" class="headerlink" title="IO流（待完善）"></a>IO流（待完善）</h1>
       
     </div>
     
@@ -454,7 +455,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/08/javaSE上/" rel="next" title="javaSE（上）">
+              <a href="/2018/10/06/javaSE上/" rel="next" title="javaSE（上）">
                 <i class="fa fa-chevron-left"></i> javaSE（上）
               </a>
             
@@ -547,7 +548,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -558,7 +559,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -609,7 +610,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#异常"><span class="nav-number">1.</span> <span class="nav-text">异常</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的runtime-exception-运行时异常-："><span class="nav-number">1.1.</span> <span class="nav-text">常见的runtime exception(运行时异常)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#throw和throws的区别"><span class="nav-number">1.2.</span> <span class="nav-text">throw和throws的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集合"><span class="nav-number">2.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用集合"><span class="nav-number">2.2.</span> <span class="nav-text">常用集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList"><span class="nav-number">2.2.1.</span> <span class="nav-text">ArrayList</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IO流（待完善）"><span class="nav-number">3.</span> <span class="nav-text">IO流（待完善）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多线程（待完善）"><span class="nav-number">4.</span> <span class="nav-text">多线程（待完善）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#异常"><span class="nav-number">1.</span> <span class="nav-text">异常</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#当finally中有返回语句"><span class="nav-number">1.1.</span> <span class="nav-text">当finally中有返回语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的runtime-exception-运行时异常-："><span class="nav-number">1.2.</span> <span class="nav-text">常见的runtime exception(运行时异常)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#throw和throws的区别"><span class="nav-number">1.3.</span> <span class="nav-text">throw和throws的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集合"><span class="nav-number">2.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用集合"><span class="nav-number">2.2.</span> <span class="nav-text">常用集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList"><span class="nav-number">2.2.1.</span> <span class="nav-text">ArrayList</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IO流（待完善）"><span class="nav-number">3.</span> <span class="nav-text">IO流（待完善）</span></a></li></ol></div>
             
 
           </div>
