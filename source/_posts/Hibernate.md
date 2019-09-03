@@ -1,11 +1,12 @@
 ---
-title: Hibernate
-date: 2018-10-14 23:20:50
+title: Hibernate简单入门
+date: 2018-09-27 21:13:50
 categories: java
 description: Hibernate
 ---
 
-# Hibernate
+# Hibernate简单入门
+用这个框架，只需要三步。配置Product.hbm.xml文件和hibernate.cfg.xml文件、编写测试类
 ## Product.hbm.xml文件
 作用是将javabean对应数据库中的表
 ```

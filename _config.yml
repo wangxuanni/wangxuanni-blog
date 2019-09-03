@@ -5,11 +5,11 @@
 
 
 # Site
-title: Zakree's blog
+title: Moonlight's blog
 subtitle: 
 description: 并非因为有了结束， 过程才具有意义。
 keywords: 
-author: Zakree
+author: Moonlight
 language: zh-Hans
 timezone:
 
@@ -20,8 +20,10 @@ live2d:
     use: live2d-widget-model-hijiki
   display:
     position: right
-    width: 70
+    width: 135
     height: 150
+    hOffset: 86
+    vOffset: 35
   mobile:
     show: false
 
