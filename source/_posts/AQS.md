@@ -459,9 +459,5 @@ final void lock() {    acquire(1);}
 4）ReentrantLock可以实现公平锁
 5）ReentrantLock通过Condition可以绑定多个条件
 6）底层实现不一样， synchronized是同步阻塞，使用的是悲观并发策略，lock是同步非阻塞，采用的是乐观并发策略
-作者：我是皮皮甜大王链接：https://www.jianshu.com/p/650498242d67来源：简书简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
 
-
-
-同步器、模板
 

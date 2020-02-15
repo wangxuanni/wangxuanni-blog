@@ -85,13 +85,15 @@ static final int hash(Object key) {
     }
 ```
 
-hashcode是一个int类型32位的数，h >>> 16即把hashcode的高16位向右移动到低16位。然后将**hashCode的高16位和低16位异或**，异或混合过后**高16位的特征也掺杂进低16位**，让数字的每一位都参加了散列运算当中。比如,h代表hashcode
+hashcode是一个int类型32位的数，h >>> 16即把hashcode的高16位向右移动到低16位。然后将**hashCode的高16位和低16位异或**，异或混合过后**高16位的特征也掺杂进低16位**，让数字的每一位都参加了散列运算当中。就像下面一样（h代表原本hashcode）
 
 ```java
 h:        1111 1111 1111 1111 1111 0000 1110 1010
 h>>16:    0000 0000 0000 0000 1111 1111 1111 1111
-h=h^h>>16:1111 1111 1111 1111 0000 1111 0001 0101
+newh=h^h>>16:1111 1111 1111 1111 0000 1111 0001 0101
 ```
+
+这样就混合了高位低位数据特征。此外，还有一个重要的原因，在后面使用（length - 1) & hash算下标时，因为length必然是2的次幂，length-1的二进制看起来就是一堆0后面跟着一个1（这个在下面第三套也会提到），如果不做扰动，高位的hashcode大部分情况都用不上。
 
 ### 第二套：key是如何hash出对应的数组下标？
 
@@ -109,7 +111,7 @@ h:            1111 1111 1111 1111 0000 1111 0001 0101
 (length-1)&h: 0000 0000 0000 0000 0000 0000 0000 0101
 ```
 
-假设有两个个key，他们的hashcode不同，分别为code1和code2code1和code2分别与“前面全是0后面全是1“二进制相与，结果一定不同。**但是，如果code1和code2分别与一个“后面不一定是1“的二进制相与，结果有可能相同**
+假设有两个个key，他们的hashcode不同，分别为code1和code2code1和code2分别与“前面全是0后面全是1“二进制相与，结果一定不同。**但是，如果code1和code2分别与一个“后面不一定是1“的二进制相与，结果有可能相同**。
 
 
 
@@ -119,59 +121,11 @@ HashMap是延迟加载，即构造函数不负责初始化，而是由resize（�
 
 具体过程是：第一次调用put()方法判断数组是否为空，如果为空调用resize（）扩容方法初始化后再put（）。
 
-## Fast-fail
+## 1.7链表插入区别
 
-#### 是什么
+HashMap在jdk**1.7中采用头插入法**，在扩容时会改变链表中元素原本的顺序，以至于在并发场景下导致链表成环的问题。
 
-**fail-fast,即快速失败机制，它是java集合中的一种错误检测机制，当多个线程或者单个线程,在结构上对集合进行改变时，就有可能会产生fail-fast机制。**
-
-*注意：结构上的改变的意思是，例如集合上的**插入和删除**就是结构上的改变，但是，如果是对集合中某个元素进行**修改**的话，并不是结构上的改变。* 
-
-#### 原理
-
-迭代器在执行next()等方法的时候，都会调用**checkForComodification()**这个方法，查看modCount==expectedModCount如果不相等则抛出异常。
-
-expectedModcount:这个值在对象被创建的时候就被赋予了一个固定的值modCount。也就是说这个值是不变的。也就是说，如果在迭代器遍历元素的时候，如果modCount这个值发生了改变，那么再次遍历时就会抛出异常。 
-
-什么时候modCount会发生改变呢？就是对集合的元素的个数做出改变的时候，modCount的值就会被改变，如果删除，插入。但修改则不会。
-
-
-
-```
-private class Itr implements Iterator<E> {
-  
-        int expectedModCount = modCount;
-        
-         public E next() {
-            checkForComodification();
-            ...省略...
-       }
-            final void checkForComodification() {
-            if (modCount != expectedModCount)
-                throw new ConcurrentModificationException();
-        }
-}
-```
-
-
-
-#### 为什么
-
-为什么要有快速失败？为什么用for(int i=0;i<list.size();i++)这种形式就能一边遍历一边修改集合？
-
-其实答案很简单，普通for循环时，当一个元素结结构被改变时，集合大小和下标也会随之变化，**size是可以随着你改变变换的**。
-
-但使用了迭代器就不行了。迭代器（Iterator）是工作在一个独立的线程中，并且拥有一个 mutex 锁。 迭代器被创建之后会建立一个指向原来对象的单链索引表，当原来的对象数量发生变化时，**这个索引表的内容不会同步改变**，所以当索引指针往后移动的时候就找不到要迭代的对象，所以按照 fail-fast 原则 迭代器会马上抛出 java.util.ConcurrentModificationException。
-
-最后说一嘴，如果非要在用迭代器的时候删除，可以用迭代器的remove方法。如下
-
-```
-  if (s.equals("a")) {
-        iter.remove();
-    }
-```
-
-
+而在jdk**1.8中采用尾插入法**，在扩容时会保持链表元素原本的顺序，就不会出现链表成环的问题了。
 
 # 重要方法源码分析
 
@@ -232,7 +186,6 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
         afterNodeInsertion(evict);
         return null;
     }
-
 ```
 
 ### put（）可能造成线程不安全的问题
@@ -277,7 +230,6 @@ final Node<K,V> getNode(int hash, Object key) {
         }
         return null;
     }
-
 ```
 
 ### 总结
@@ -336,7 +288,6 @@ remove方法的流程大致和get方法类似。
         Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
         //如果是初始化，到这里就结束啦，直接跳到最后返回table新数组。
         table = newTab;
-
 ```
 
 第二段，遍历原数组每一个结点，有三种情况：只有一个头结点、是红黑树、是链表。
@@ -355,7 +306,6 @@ remove方法的流程大致和get方法类似。
                     else if (e instanceof TreeNode)
                         ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
                     else { //否则就是链表，这种情况复制比较复杂，单独分一段讲
-
 ```
 
 第三段，链表的复制比较复杂。
@@ -367,7 +317,6 @@ remove方法的流程大致和get方法类似。
 hashcode:1111 1111 1111 1111 0000 1111 0001 0101
 length:  0000 0000 0000 0000 0000 0000 0001 0000
          0000 0000 0000 0000 0000 0000 0001 0000 
-
 ```
 
 如果(e.hash & oldCap) 等于0，则该节点在新、旧数组的下标都是k。
@@ -415,7 +364,6 @@ length:  0000 0000 0000 0000 0000 0000 0001 0000
             }
         }
         return newTab;
-
 ```
 
 ### 总结
@@ -439,7 +387,6 @@ length:  0000 0000 0000 0000 0000 0000 0001 0000
 ```java
 if (key == null)            return putForNullKey(value);      而当HashTable遇到null时，他会直接抛出NullPointerException异常信息。
 if (value == null) {    throw new NullPointerException();
-
 ```
 
 二、**是否线程安全。**Hashtable的方法是线程安全的，而HashMap的方法不是。
@@ -449,7 +396,6 @@ Hashtable的方法都是用synchronized修饰的，在修改数组时锁住整�
 ```java
 public synchronized V put(K key, V value) {...}
 public synchronized V put(K key, V value) {...}
-
 ```
 
 三、HashTable基于Dictionary类，而HashMap是基于AbstractMap。
@@ -468,6 +414,3 @@ put方法会检查是否有Node节点,如果没有则在循环中使用**CAS**�
 
 扩容，让每个线程处理自己的区间。通过给每个线程分配桶区间，避免线程间的争用。而如果有新的线程想 put 数据时，也会帮助其扩容。无锁扩容的关键就是通过CAS设置sizeCtl与transferIndex变量，协调多个线程对table数组中的node进行迁移（transferIndex是指向剩余迁移结点的指针）。复制链表时同样会将链表拆成两份。
 
-## 与HashSet
-
-## HashMap1.7
