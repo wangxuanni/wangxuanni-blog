@@ -5,11 +5,11 @@
 
 
 # Site
-title: Moonlight's blog
+title: 王轩妮
 subtitle: 
 description: 并非因为有了结束， 过程才具有意义。
 keywords: 
-author: Moonlight
+author: 刻羽
 language: zh-Hans
 timezone:
 
@@ -102,8 +102,9 @@ theme: next
 deploy:
   type: git
   repo:
-    github: git@github.com:zakree/needroot.github.io.git,master
-    coding: git@git.coding.net:Zakree/Zakree.coding.io.git,master
+    github: git@github.com:wangxuanni/wangxuanni-blog.git,master
+
+#    coding: git@git.coding.net:Zakree/Zakree.coding.io.git,master
 
 search:
   path: search.xml
