@@ -1,9 +1,9 @@
 ---
-title: redis详解
+title: 一文掌握redis
 date: 2019-09-01 16:36:50
 categories: 秋招
 description: 写得比较完善的一篇笔记，应该有把握住一些重点。
-top: 10
+top: 9
 
 ---
 
