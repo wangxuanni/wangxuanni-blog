@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="synchronized与volatile原理解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="synchronized与volatile原理解析">
+<meta property="og:url" content="http://wangxuanni.top/2019/10/01/synchronized与volatile/index.html">
+<meta property="og:site_name" content="王轩妮">
+<meta property="og:description" content="synchronized与volatile原理解析">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://wangxuanni.oss-cn-hongkong.aliyuncs.com/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A6%82%E5%BF%B5.png">
+<meta property="og:updated_time" content="2022-02-08T07:09:41.227Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="synchronized与volatile原理解析">
+<meta name="twitter:description" content="synchronized与volatile原理解析">
+<meta name="twitter:image" content="https://wangxuanni.oss-cn-hongkong.aliyuncs.com/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A6%82%E5%BF%B5.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxuanni.top/2019/10/01/synchronized与volatile/">
+
+
+
+
+
+  <title>synchronized与volatile原理解析 | 王轩妮</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/wangxuanni"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">王轩妮</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2019/10/01/synchronized与volatile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">synchronized与volatile原理解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-01T23:53:50+08:00">
+                2019-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/并发/" itemprop="url" rel="index">
+                    <span itemprop="name">并发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/01/synchronized与volatile/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/01/synchronized与volatile/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12min
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  synchronized与volatile原理解析
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h1><p>在学synchronized和volatile之前，我们先来了解一个概念——什么是线程安全？<br>线程安全简单来说就在多线程的情况下也不会有问题，看似一句废话，要怎么理解呢<br>比如ArrayList不是线程安全的就是一个线程不安全的类，<br>如果两个线程对可以同一个ArrayList进行add操作会出现什么结果？请看下面代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class MyTest &#123;</span><br><span class="line">            static List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">            static class BB implements Runnable &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    for (int j = 0; j &lt; 10000; j++) &#123;</span><br><span class="line">                        list.add(j);</span><br><span class="line">                    &#125; &#125; &#125;</span><br><span class="line"></span><br><span class="line">public static void main(String[] args) throws InterruptedException&#123;</span><br><span class="line"></span><br><span class="line">                BB b = new BB();</span><br><span class="line">                Thread t1 = new Thread(b);</span><br><span class="line">                Thread t2 = new Thread(b);</span><br><span class="line">                t1.start();</span><br><span class="line">                t2.start();</span><br><span class="line">                t1.join();</span><br><span class="line">                t2.join();</span><br><span class="line"></span><br><span class="line">                System.out.println(list.size());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>问题出在add方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e) &#123;   ensureCapacityInternal(size + 1);   </span><br><span class="line">elementData[size++] = e;  </span><br><span class="line">return true;&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的程序，可能有三种情况发生：</p>
+<ul>
+<li>数组下标越界。首先要检查容量，必要时进行扩容。每当在数组边界处，如果A线程和B线程同时进入并检查容量，也就是它们都执行完ensureCapacityInternal方法，因为还有一个空间，所以不进行扩容，此时如果A暂停下来，B成功自增；然后接着A从 elementData[size++]=e开始执行，由于A之前已经检查过没有扩容，而B成功自增使得现在没有空余空间了，此时A就会发生数组下标越界。</li>
+<li>小于20000。size++可以看成是 size=size+1，这一行代码包括三个步骤，先读取size，然后将size加1，最后将这个新值写回到size。此时若A和B线程同时读取到size假设为10，B先自增成功size变11，然后回来A因为它读到的size也是10，所以自增后写入size被更新成11，也就是说两次自增，实际上size只增大了1。因此最后的size会小于200。</li>
+<li>等于20000 很幸运，没有发生上面情况<br>顺便说一句，线程越多，或者加的数越大越可能出现不安全的问题</li>
+</ul>
+<h1 id="synchronized：“这条桥上一次只能过一个人”"><a href="#synchronized：“这条桥上一次只能过一个人”" class="headerlink" title="synchronized：“这条桥上一次只能过一个人”"></a>synchronized：“这条桥上一次只能过一个人”</h1><h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>互斥、JVM内置锁、对象锁、可重入(避免死锁)</p>
+<h2 id="有什么用"><a href="#有什么用" class="headerlink" title="有什么用"></a>有什么用</h2><ul>
+<li><strong>原子性</strong>：确保线程互斥的访问同步代码；</li>
+<li><strong>可见性</strong>：保证共享变量的修改能够及时可见，其实是通过Java内存模型中的 <strong>“对一个变量unlock操作之前，必须要同步到主内存中；如果对一个变量进行lock操作，则将会清空工作内存中此变量的值，在执行引擎使用此变量前，需要重新从主内存中load操作或assign操作初始化变量值”</strong> 来保证的；</li>
+<li><strong>有序性</strong>：有效解决重排序问题，即 <strong>“一个unlock操作先行发生(happen-before)于后面对同一个锁的lock操作”</strong>；</li>
+</ul>
+<h2 id="怎么用"><a href="#怎么用" class="headerlink" title="怎么用"></a>怎么用</h2><p>当synchronized作用在实例方法时，监视器锁（monitor）便是<strong>对象实例（this）</strong>；</p>
+<p>当synchronized作用在静态方法时，监视器锁（monitor）便是对象的<strong>Class实例</strong>，因为Class数据存在于永久代，因此静态方法锁相当于该类的一个<strong>全局锁</strong>；</p>
+<p>当synchronized作用在某一个对象实例时，监视器锁（monitor）便是<strong>括号括起来的对象实例</strong>；</p>
+<h2 id="为什么"><a href="#为什么" class="headerlink" title="为什么"></a>为什么</h2><p>想了解synchronized的原理，首先要了解两个东西：对象头中的Mark Word和Monitor，说白了，前者是资源的锁，后者是拥有者线程的锁记录。加锁要修改拥有者和资源的锁记录才行。</p>
+<p>加锁的时候<strong>首先要添加拥有者线程的锁记录</strong>，虚拟机会在当前线程的栈帧中建立一个名为锁记录( Lock Record)的空间,用于存储锁对象目前的Mark Word的拷贝</p>
+<p><strong>然后要修改资源的锁记录</strong>,虚拟机将使用<strong>CAS</strong>操作尝试将对象的 Mark Word更新为指向 Lock record的指针。如果这个更新动作成功了,那么这个线程就拥有了该对象的锁,并且对象 Mark Word的锁标志位将转变为“00”,即表示此对象处于轻量级锁定状态。</p>
+<h3 id="Monitor"><a href="#Monitor" class="headerlink" title="Monitor"></a>Monitor</h3><p>Monitor是<strong>线程私有</strong>的数据结构，每一个线程都有一个可用monitor record列表，它依赖于底层的操作系统的<strong>Mutex Lock（互斥锁）</strong>来实现的线程同步。这种方式就是synchronized最初实现同步的方式，这就是JDK 6之前synchronized效率低的原因。这种依赖于操作系统Mutex Lock所实现的锁我们称之为“重量级锁”，JDK 6中为了减少获得锁和释放锁带来的性能消耗，引入了“偏向锁”和“轻量级锁”。</p>
+<h3 id="对象头中的Mark-Word"><a href="#对象头中的Mark-Word" class="headerlink" title="对象头中的Mark Word"></a>对象头中的Mark Word<img src="https://wangxuanni.oss-cn-hongkong.aliyuncs.com/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A6%82%E5%BF%B5.png" alt="多线程概念"></h3><p><strong>对象头</strong>：Mark Word（标记字段）、Klass Pointer（类型指针）、数组长度数据（可选）</p>
+<p><strong>实例数据</strong>：存放<strong>类的属性</strong>数据信息，包括父类的属性信息；</p>
+<p><strong>对齐填充</strong>：由于虚拟机要求 对象起始地址必须是8字节的整数倍。填充数据<strong>不是必须的</strong>，仅仅是为了字节对齐；</p>
+<p><strong>Mark Word中四种锁状态标识</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">锁状态</th>
+<th style="text-align:left">存储内容</th>
+<th style="text-align:left">存储内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">无锁</td>
+<td style="text-align:left">对象的hashCode、对象分代年龄、是否是偏向锁（0）</td>
+<td style="text-align:left">01</td>
+</tr>
+<tr>
+<td style="text-align:left">偏向锁</td>
+<td style="text-align:left">偏向线程ID、偏向时间戳、对象分代年龄、是否是偏向锁（1）</td>
+<td style="text-align:left">01</td>
+</tr>
+<tr>
+<td style="text-align:left">轻量级锁</td>
+<td style="text-align:left">指向栈中锁记录的指针</td>
+<td style="text-align:left">00</td>
+</tr>
+<tr>
+<td style="text-align:left">重量级锁</td>
+<td style="text-align:left">指向互斥量（重量级锁）的指针</td>
+<td style="text-align:left">10</td>
+</tr>
+</tbody>
+</table>
+<p><em>注意：无锁和偏向锁使用的是一个标志位，但偏向锁还有是否是偏向锁标志位、线程ID、Epoch等</em></p>
+<p>接下来我将顺着标识位来讲synchronized的四种锁状态。</p>
+<h3 id="四种锁状态"><a href="#四种锁状态" class="headerlink" title="四种锁状态"></a>四种锁状态</h3><p>JDK 6之前synchronized效率低，是因为依赖于操作系统Mutex Lock，即“重量级锁”，阻塞或唤醒一个Java线程需要操作系统切换CPU状态来完成，这种状态转换需要耗费处理器时间。JDK 6中为了减少获得锁和释放锁带来的性能消耗，引入了“偏向锁”和“轻量级锁”。</p>
+<p>JDK 6之后的synchronized锁级别从低到高依次是：<strong>无锁、偏向锁、轻量级锁和重量级锁。锁状态只能升级不能降级。</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>锁</strong></th>
+<th>消耗</th>
+<th><strong>缺点</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>偏向锁</td>
+<td>加锁和解锁时对比Mark Word，只需一次CAS原子指令</td>
+<td>如果线程间存在锁竞争，会带来额外的锁撤销的消耗</td>
+<td>适用于只有一个线程访问同步块场景</td>
+</tr>
+<tr>
+<td>轻量级锁</td>
+<td>将Mark word拷贝到栈帧的锁记录中，再将Mark Word替换为锁记录的指针。多个CAS操作和自旋。</td>
+<td>自旋会消耗<strong>CPU</strong>，但相应时间快</td>
+<td>追求响应速度，同步块执行速度非常快</td>
+</tr>
+<tr>
+<td>重量级锁</td>
+<td>依赖于操作系统Mutex Lock，等待线程被阻塞挂起</td>
+<td>线程阻塞<strong>响应时间缓慢</strong>，但不会消耗CPU</td>
+<td>追求吞吐量，同步块执行速度较长</td>
+</tr>
+</tbody>
+</table>
+<h4 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a><strong>偏向锁</strong></h4><p>HotSpot发现：在大多数情况下，锁总是由同一线程多次获得，不存在多线程竞争，所以出现了偏向锁。其目标就是在只有一个线程执行同步代码块时能够提高性能。</p>
+<p>当一个线程访问同步代码块并获取锁时，会在Mark Word里存储<strong>锁偏向的线程ID</strong>。在线程进入和退出同步块时不再通过CAS操作来加锁和解锁，而是检测Mark Word里是否存储着指向当前线程的偏向锁。引入偏向锁是为了在<strong>无多线程竞争的情况下尽量减少不必要的轻量级锁执行路径</strong>，因为轻量级锁的获取及释放依赖<strong>多次</strong>CAS原子指令，而偏向锁只需要在置换ThreadID的时候依赖<strong>一次</strong>CAS原子指令即可。</p>
+<p>偏向锁只有遇到其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁，线程不会主动释放偏向锁。偏向锁的撤销，需要等待<strong>全局安全点</strong>（在这个时间点上没有字节码正在执行），它会首先暂停拥有偏向锁的线程，判断锁对象是否处于被锁定状态。撤销偏向锁后恢复到无锁（标志位为“01”）或轻量级锁（标志位为“00”）的状态。</p>
+<p>偏向锁在JDK 6及以后的JVM里是默认启用的。可以通过JVM参数关闭偏向锁：-XX:-UseBiasedLocking=false，关闭之后程序默认会进入轻量级锁状态。</p>
+<h4 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a><strong>轻量级锁</strong></h4><p>是指当锁是偏向锁的时候，被另外的线程所访问，偏向锁就会升级为轻量级锁，<strong>其他线程会通过自旋</strong>的形式尝试获取锁，不会阻塞，从而提高性能。</p>
+<p>虚拟机会在当前线程的栈帧中建立一个名为锁记录( Lock Record)的空间,用于存储锁对象目前的Mark Word的拷贝。<br>然后虚拟机将使用<strong>CAS</strong>操作尝试将对象的 Mark Word更新为指向 Lock record的指针。如果这个更新动作成功了,那么这个线程就拥有了该对象的锁,并且对象 Mark Word的锁标志位将转变为“00”,即表示此对象处于轻量级锁定状态。即上面说的加锁要修改拥有者和资源的锁记录才行。</p>
+<p>如果轻量级锁的更新操作失败了，虚拟机首先会检查对象的Mark Word是否指向当前线程的栈帧，如果是就说明当前线程已经拥有了这个对象的锁，那就可以直接进入同步块继续执行，否则说明多个线程竞争锁。</p>
+<p>若当前只有一个等待线程，则该线程通过自旋进行等待。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有<strong>第三个</strong>来访时，轻量级锁升级为重量级锁。</p>
+<h4 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a><strong>重量级锁</strong></h4><p>升级为重量级锁时，锁标志的状态值变为“10”，此时Mark Word中存储的是指向重量级锁的指针，此时<strong>等待锁的线程都会进入阻塞状态。</strong></p>
+<h1 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h1><h2 id="有什么用-1"><a href="#有什么用-1" class="headerlink" title="有什么用"></a>有什么用</h2><p>volatile是一个关键字，用于修饰变量。被其修饰的变量具有可见性和有序性。</p>
+<ul>
+<li><strong>可见性</strong>，当一条线程修改了这个变量的值，新值能被其他线程立刻观察到。其实这里要结合Java内存结构来说：在缓存在本CPU对变量的修改直接写入主内存中，同时这个写操作使得其他CPU中对应变量的缓存行无效，这样其他线程在读取这个变量时候必须从主内存中读取，所以读取到的是最新的，这就是上面说得能被立即“看到”。</li>
+<li><strong>有序性</strong>，即volatile可以<strong>禁止指令重排</strong>。volatile在其汇编代码中有一个lock操作，这个操作相当于一个<strong>内存屏障</strong>，指令重排不能越过内存屏障。具体来说在执行到volatile变量时，内存屏障之前的语句一定被执行过了且结果对后面是已知的，而内存屏障后面的语句一定还没执行到；在volatile变量之前的语句不能被重排后其之后，相反其后的语句也不能被重排到之前。</li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>加入volatile关键字时，会多出一个<strong>lock前缀指令</strong>。lock前缀指令其实就相当于一个内存屏障。<strong>内存屏障是一组处理指令，用来实现对内存操作的顺序限制。</strong>volatile的底层就是通过内存屏障来实现的。</p>
+<p>lock前缀会做两件事情：</p>
+<ul>
+<li><strong>将当前处理器缓存行的数据会写回到系统内存。</strong>这可以保证写操作强制被更新到处理器，处理器的值是最新的。</li>
+<li>这个写回内存的操作会引起在其他CPU里缓存了该内存地址的数据无效。<strong>这可以保证每个线程总是去处理器读，而不是使用自己可能过期的缓存数据。</strong>以实现缓存一致性协议，每个处理器通过嗅探在总线上传播的数据来检查自己缓存的值是不是过期了，当处理器发现自己缓存行对应的内存地址被修改，就会将当前处理器的缓存行设置成无效状态，当处理器要对这个数据进行修改操作的时候，会强制重新从系统内存里把数据读到处理器缓存里。</li>
+</ul>
+<p>也就符合了happens-before原则中——同一时间对volatile变量的写操作总先于读操作，实现了程序的有序性。（如果两个操作的执行顺序无法从happens-before原则中推到出来，那么他们就不能保证有序性，可以随意进行重排序。）</p>
+<h2 id="经典场景"><a href="#经典场景" class="headerlink" title="经典场景"></a>经典场景</h2><p>chm的get方法是<strong>不加锁的</strong>，因为get方法里的共享变量都定义成volatile类型，保证能被多线程的读，但只能被单线程的写。即使一个线程在读一个线程同时在写，根据happen before原则，对volatile字段的写入先于读操作，所以get总能拿到最新的值。这是用volatile替换锁的经典场景。</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h3 id="为什么wait-notify在Object类里，而把sleep放在Thread类里面？"><a href="#为什么wait-notify在Object类里，而把sleep放在Thread类里面？" class="headerlink" title="为什么wait,notify在Object类里，而把sleep放在Thread类里面？"></a>为什么wait,notify在Object类里，而把sleep放在Thread类里面？</h3><p>sleep和wait的区别在于：sleep方法没有释放锁，而wait方法释放了锁。</p>
+<p>一个线程可以拥有多个对象锁，wait，notify，notifyAll跟对象锁之间是有一个绑定关系的，假如用Thread.wait()，Thread.notify()，Thread.notifyAll()来调用，虚拟机根本就不知道需要操作的对象锁是哪一个。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/25/CAS/" rel="next" title="CAS核心原理">
+                <i class="fa fa-chevron-left"></i> CAS核心原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/09/循环依赖/" rel="prev" title="Spring怎么解决循环依赖？">
+                Spring怎么解决循环依赖？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="刻羽">
+            
+              <p class="site-author-name" itemprop="name">刻羽</p>
+              <p class="site-description motion-element" itemprop="description">并非因为有了结束， 过程才具有意义。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wangxuanni" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="xiantang.info" title="咸糖" target="_blank">咸糖</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://zmosquito.github.io" title="蚊子" target="_blank">蚊子</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程安全"><span class="nav-number">1.</span> <span class="nav-text">线程安全</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized：“这条桥上一次只能过一个人”"><span class="nav-number">2.</span> <span class="nav-text">synchronized：“这条桥上一次只能过一个人”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关键词"><span class="nav-number">2.1.</span> <span class="nav-text">关键词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有什么用"><span class="nav-number">2.2.</span> <span class="nav-text">有什么用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么用"><span class="nav-number">2.3.</span> <span class="nav-text">怎么用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么"><span class="nav-number">2.4.</span> <span class="nav-text">为什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Monitor"><span class="nav-number">2.4.1.</span> <span class="nav-text">Monitor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象头中的Mark-Word"><span class="nav-number">2.4.2.</span> <span class="nav-text">对象头中的Mark Word</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四种锁状态"><span class="nav-number">2.4.3.</span> <span class="nav-text">四种锁状态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#偏向锁"><span class="nav-number">2.4.3.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#轻量级锁"><span class="nav-number">2.4.3.2.</span> <span class="nav-text">轻量级锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重量级锁"><span class="nav-number">2.4.3.3.</span> <span class="nav-text">重量级锁</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">3.</span> <span class="nav-text">volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有什么用-1"><span class="nav-number">3.1.</span> <span class="nav-text">有什么用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">3.2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#经典场景"><span class="nav-number">3.3.</span> <span class="nav-text">经典场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么wait-notify在Object类里，而把sleep放在Thread类里面？"><span class="nav-number">4.0.1.</span> <span class="nav-text">为什么wait,notify在Object类里，而把sleep放在Thread类里面？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刻羽</span>
+
+  
+</div>
+
+
+  <div class="powered-by">  
+  </div>
+  <span>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
+</div>
+<!-- 
+<div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </footer></div>
+    
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: '8mVebIc8A5BSLnOwM58Kjqnm-gzGzoHsz',
+        appKey: 'gdBaeDvg94MR2FENCtcLLbIf',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，来玩啊!',
+        avatar:'',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":135,"height":150,"hOffset":86,"vOffset":35},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!-- ҳ����С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>

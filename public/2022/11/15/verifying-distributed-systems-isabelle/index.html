@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="众所周知，分布式系统很难推理，正确性的正式证明对于分布式算法很有价值。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(译)用 Isabelle&#x2F;HOL 验证分布式系统">
+<meta property="og:url" content="http://wangxuanni.top/2022/11/15/verifying-distributed-systems-isabelle/index.html">
+<meta property="og:site_name" content="王轩妮">
+<meta property="og:description" content="众所周知，分布式系统很难推理，正确性的正式证明对于分布式算法很有价值。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/wangxuanni/wangxuanni_blo@masterg_img/img/time-steps.png">
+<meta property="og:image" content="https://martin.kleppmann.com/2022/10/system-model.png">
+<meta property="og:image" content="https://martin.kleppmann.com/2022/10/induction.png">
+<meta property="og:updated_time" content="2022-12-09T16:55:35.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="(译)用 Isabelle&#x2F;HOL 验证分布式系统">
+<meta name="twitter:description" content="众所周知，分布式系统很难推理，正确性的正式证明对于分布式算法很有价值。">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/wangxuanni/wangxuanni_blo@masterg_img/img/time-steps.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxuanni.top/2022/11/15/verifying-distributed-systems-isabelle/">
+
+
+
+
+
+  <title>(译)用 Isabelle/HOL 验证分布式系统 | 王轩妮</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/wangxuanni"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">王轩妮</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2022/11/15/verifying-distributed-systems-isabelle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">(译)用 Isabelle/HOL 验证分布式系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-11-15T23:53:50+08:00">
+                2022-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/11/15/verifying-distributed-systems-isabelle/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/11/15/verifying-distributed-systems-isabelle/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12min
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  众所周知，分布式系统很难推理，正确性的正式证明对于分布式算法很有价值。
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<ul>
+<li>我翻译的这篇文章参与了掘金翻译计划，选自英语优秀技术文章。 </li>
+<li>原文地址：<a href="https://martin.kleppmann.com/2022/10/12/verifying-distributed-systems-isabelle.html" target="_blank" rel="noopener">Verifying distributed systems with Isabelle/HOL</a></li>
+<li>原文作者：<a href="https://martin.kleppmann.com/" target="_blank" rel="noopener">Martin Kleppmann</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner" target="_blank" rel="noopener">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2022/verifying-distributed-systems-isabelle.md" target="_blank" rel="noopener">https://github.com/xitu/gold-miner/blob/master/article/2022/verifying-distributed-systems-isabelle.md</a></li>
+<li>译者：<a href="https://github.com/wangxuanni" target="_blank" rel="noopener">wangxuanni</a></li>
+<li>校对者：<a href="https://github.com/Quincy-Ye" target="_blank" rel="noopener">Quincy-Ye</a> 、<a href="https://github.com/vuuihc" target="_blank" rel="noopener">vuuihc</a></li>
+</ul>
+</blockquote>
+<h1 id="用-Isabelle-HOL-验证分布式系统"><a href="#用-Isabelle-HOL-验证分布式系统" class="headerlink" title="用 Isabelle/HOL 验证分布式系统"></a>用 Isabelle/HOL 验证分布式系统</h1><p>我们每天都以互联网服务的形式使用分布式系统。这些系统很有用，但实现起来也很有挑战性，因为网络是不可预料的。每当你发送一条网络消息的时候，它有可能很快到达，也有可能延迟很久，或者永远不会达到，又或者多次到达。</p>
+<p>当你向另一个进程发送请求但没有收到响应时，你完全不知道发生了什么：是这个请求丢失了，还是另一个进程崩溃了，或者是响应丢失了？或者可能没有任何东西丢失，消息只是延迟了，还没有到达。没有办法知道发生了什么，因为进程通信的唯一方式是不可靠的消息传递。</p>
+<p>分布式算法在这个不可靠的交流模型之上建立了一个更强大的保证。这种更强大的保证的例子包括数据库的事务和复制（在多台机器上维护一些数据的副本，以便当其中一个机器宕机时，数据不会丢失）。</p>
+<p>不幸的是，众所周知，分布式系统很难推理。因为不论消息到达的顺序如何，他们都必须维护他们的保证，甚至是在一些消息丢失，或者一些进程奔溃的时候也如此。。许多算法非常微妙，非正式的推理不足以确保它们是正确的。此外，并发活动可能出现的排列和交织的数量，很快就变得太多，以至于模型检查器无法进行详尽的测试。出于这个原因，正确性的正式证明对于分布式算法很有价值。</p>
+<h2 id="在-Isabelle-HOL-中建模一个分布式系统"><a href="#在-Isabelle-HOL-中建模一个分布式系统" class="headerlink" title="在 Isabelle/HOL 中建模一个分布式系统"></a>在 Isabelle/HOL 中建模一个分布式系统</h2><p>在这篇博文里，我们将会探索怎么样使用 Isabelle/HOL 辅助证明，去正式地验证一些分布式算法。Isabelle/HOL 没有对分布式计算有任何内置的支持，不过幸运的是，可以十分简单的使用 Isabelle/HOL 提供的结构：方法，列表和集合，去建模一个分布式系统。</p>
+<p>首先，我们假设在系统里每一个进程（或<strong>节点</strong>）都有一个唯一的标识符，它可以简单的是一个整数或是一个字符串。根据算法，系统中一组进程 ID 可能是固定的和已知的，或者是未知的和不固定的（后者适用于进程们随时可以加入或离开的系统）。</p>
+<p>然后算法的执行以离散的时间步长进行。在每个时间步长中，一个事件发生在其中一个进程上。这个事件可能是这三件事中的一个：接收一个其他进程发送过来的消息，接收用户的输入或者是超时。</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">datatype</span> (<span class="symbol">'proc</span>, <span class="symbol">'msg</span>, <span class="symbol">'val</span>) event</span><br><span class="line">  = <span class="type">Receive</span> (msg_sender: <span class="symbol">'proc</span>) (recv_msg: <span class="symbol">'msg</span>)</span><br><span class="line">  | <span class="type">Request</span> <span class="symbol">'val</span></span><br><span class="line">  | <span class="type">Timeout</span></span><br></pre></td></tr></table></figure>
+<p>被这些事件之一触发，进程会执行一个方法，可能会更新自己的状态并向其他进程发送信息。在一个时间步长发送的消息，可能会被在未来任何的时间步长接收到，或者可能完全不会被接收到。</p>
+<p>每个进程都有一个不与任何其他进程共享的本地状态，这个状态在执行开始的时候是固定的初始值，并且只有当进程执行的时候更新。一个进程无法读取另一个进程的状态，但我们可以将整个系统的状态描述为所有进程的各个状态的集合：</p>
+<p><img src="https://cdn.staticaly.com/gh/wangxuanni/wangxuanni_blo@masterg_img/img/time-steps.png" alt="图片"></p>
+<h2 id="为什么线性的时间步长序列就足够了？"><a href="#为什么线性的时间步长序列就足够了？" class="headerlink" title="为什么线性的时间步长序列就足够了？"></a>为什么线性的时间步长序列就足够了？</h2><p>尽管真实的进程可能是并发运行的，我们不需要对并发进行建模，因为进程之间的交流只有发送和接收消息，并且我们可以假设一个进程在开始处理下一个事件之前完成了一个事件的处理。因此，每个并行执行都等价于一些线性的执行步骤序列。分布式系统的其他规范，例如 <a href="https://lamport.azurewebsites.net/tla/tla.html" target="_blank" rel="noopener">TLA+ 语言</a> ，也使用这种线性的步骤序列。</p>
+<p>我们不对哪个时间步由哪个进程执行任何假设。进程可以公平地轮流运行，但同样有可能一个进程执行一百万次，而另一个进程什么也不做。通过避免对进程活动的假设，我们确保算法无论系统中的时间如何都能正常工作。例如，一个暂时与网络断开连接的进程仅由一个没有经历任何接收消息事件的进程建模，即使其他进程继续发送和接收消息也是如此。</p>
+<p>在这个模型里面，一个进程的宕机只表示它在某个时间步长后不会再执行更多的步骤了；没有必要明确表示宕机。如果我们想让进程从宕机中恢复，我们可以添加第四种类型的事件来模拟崩溃后重新启动的进程。一个进程可以在崩溃后重新启动。当执行这样的崩溃恢复事件时，进程会删除其本地状态中存储在不稳定的内存中的任何部分，但保留其状态中稳定存储（在磁盘上）中的那些部分，在宕机中会幸存下来。</p>
+<p>当推理算法安全属性时，最好不要假设哪个进程在哪个时间步执行，因为这样可以确保算法可以容忍任意消息延迟。如果我们想要推理存活（比如，算法最终终止），我们将不得不做出一些公平假设，比如说每一个未崩溃的进程最终会执行一个步骤。然而，在我们的证明里面，我们只聚焦在安全属性上。</p>
+<p><img src="https://martin.kleppmann.com/2022/10/system-model.png" alt="System model: linear sequence of time steps; at each step, one process handles an event"></p>
+<p>现在我们可以将一个分布式的算法表示为 <strong>step function</strong> ，它接受三个参数：执行当前时间步长的进程的 ID、该进程的当前本地状态和已发生的事件（消息接收、用户输入、超时，或崩溃恢复）。返回值包含该进程的新状态，以及一组要发送到其他进程的消息（每条消息都标记有接收进程的 ID ）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type_synonym (&apos;proc, &apos;state, &apos;msg, &apos;val) step_func =</span><br><span class="line">  ‹&apos;proc ⇒ &apos;state ⇒ (&apos;proc, &apos;msg, &apos;val) event ⇒</span><br><span class="line">  (&apos;state × (&apos;proc × &apos;msg) set)›</span><br></pre></td></tr></table></figure>
+<p>进程在一个时间步骤的当前状态等于它在前一步骤之后的新状态（或者如果没有前一步骤，则为初始状态）。进程在一个时间步的当前状态等于同一进程在前一步之后的新状态（就是初始的状态）。假设 step 函数是确定性的，我们现在可以把系统里任何一个执行编码为（进程 ID ，事件）键值对的集合，表示发生的一系列事件，以及它们发生在哪个进程。系统的最终状态是通过一次调用一个事件的阶跃函数来获得的。</p>
+<h2 id="去定义可能发生了什么"><a href="#去定义可能发生了什么" class="headerlink" title="去定义可能发生了什么"></a>去定义可能发生了什么</h2><p>为了证明分布式算法的正确性，我们需要证明它在每次可能的执行中产生正确的结果，也就是说对于每一个可能的（进程ID，事件）键值对集合。但哪一种执行是可能的？只有一件事是我们可以安全地假设的：如果一个进程接收到一条消息，那么该消息一定已经发送到该进程。换句话来说，我们假设网络不会凭空捏造消息，并且一个进程不能模拟另一个进程。（在攻击者可以注入虚假数据包的公共网络中，我们必须对消息进行加密验证以确保此属性，但现在让我们将其排除在范围之外。）</p>
+<p>因此，我们将做出的唯一假设是，如果在某个时间步长接收到消息，那么它一定是在前一个时间步长发送的。然而，我们会允许消息丢失、乱序或者是接收多次，让我们在 Isabelle/HOL 中编码这个假设。</p>
+<p>首先，我们定义一个函数来告诉我们单个事件是否可能发生：如果事件 evt 被允许在系统中的进程 <code>proc</code> 中发生，<code>(valid_event evt proc msgs)</code> 会返回 true ，<code>msgs</code>  是迄今为止已发送的所有消息的集合。 <code>msgs</code> 是（发件人、收件人、消息）的三元组。在整个系统里。我们定义一个接受事件是允许出现的，如果接收的消息是在 msgs 和 Request 或者 Timeout 事件中，则允许事件发生，或者允许事件随时发生。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fun valid_event :: ‹(&apos;proc, &apos;msg, &apos;val) event ⇒ &apos;proc ⇒</span><br><span class="line">                    (&apos;proc × &apos;proc × &apos;msg) set ⇒ bool›</span><br><span class="line">where</span><br><span class="line">  ‹valid_event (Receive sender msg) recpt msgs =</span><br><span class="line">    ((sender, recpt, msg) ∈ msgs)› |</span><br><span class="line">  ‹valid_event (Request _) _ _ = True› |</span><br><span class="line">  ‹valid_event Timeout _ _ = True›</span><br></pre></td></tr></table></figure>
+<p>接下来，我们定义所有可能的事件序列集合。为此，我们在 Isabelle 中使用了一个归纳断言：如果 <code>events</code>是算法执行中的有效事件集合，<code>step</code>是阶跃函数， <code>init</code> 是每个进程的初始状态，<code>proc</code>是系统中所有进程的集合（如果我们希望允许任意数量的进程，这可能是无限的），那么 <code>(execute step init procs events msgs states)</code> 返回 true 。最后两个参数跟踪执行状态：<code>msgs</code> 是迄今为止发送的所有消息的集合，<code>states</code> 是从进程 ID 到该进程状态的映射。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">inductive execute ::</span><br><span class="line">  ‹(&apos;proc, &apos;state, &apos;msg, &apos;val) step_func ⇒ (&apos;proc ⇒ &apos;state) ⇒</span><br><span class="line">   &apos;proc set ⇒ (&apos;proc × (&apos;proc, &apos;msg, &apos;val) event) list ⇒</span><br><span class="line">   (&apos;proc × &apos;proc × &apos;msg) set ⇒ (&apos;proc ⇒ &apos;state) ⇒ bool›</span><br><span class="line">where</span><br><span class="line">  ‹execute step init procs [] &#123;&#125; init› |</span><br><span class="line">  ‹⟦execute step init procs events msgs states;</span><br><span class="line">    proc ∈ procs;</span><br><span class="line">    valid_event event proc msgs;</span><br><span class="line">    step proc (states proc) event = (new_state, sent);</span><br><span class="line">    events&apos; = events @ [(proc, event)];</span><br><span class="line">    msgs&apos; = msgs ∪ &#123;m. ∃(recpt, msg) ∈ sent.</span><br><span class="line">                       m = (proc, recpt, msg)&#125;;</span><br><span class="line">    states&apos; = states (proc := new_state)</span><br><span class="line">   ⟧ ⟹ execute step init procs events&apos; msgs&apos; states&apos;›</span><br></pre></td></tr></table></figure>
+<p>该定义规定，当系统处于初始状态且未发送任何消息时，空事件列表有效。此外，如果 <code>events</code> 是迄今为止有效的事件序列，并且 <code>event</code> 在当前状态下是允许的，那么我们可以调用 step 函数，添加它发送到 <code>msgs</code> 的任何消息，更新相应进程的状态，其返回值是另一个有效的事件序列。</p>
+<p>这就是我们建模一个分布式系统所需要的全部！</p>
+<h2 id="证明一个算法正确性"><a href="#证明一个算法正确性" class="headerlink" title="证明一个算法正确性"></a>证明一个算法正确性</h2><p>现在我们可以用一些算法（由它的阶跃函数和初始状态定义），并证明对于所有可能的事件列表，某些属性 <strong>P</strong> 成立。由于我们没有规定时间步长的最大值，因此可能的事件列表是无限的。但这不是问题，因为我们可以对列表使用归纳法来证明 <strong>P</strong> 。</p>
+<p><img src="https://martin.kleppmann.com/2022/10/induction.png" alt="The Isabelle/HOL induction principle over lists"></p>
+<p>我们使用在 Isabelle/HOL 里 <code>List.rev_induct</code> 里的归纳规则。它要求证明：</p>
+<ol>
+<li>对于空集合，属性 <strong>P</strong> 的值为真 (比如系统处于初始化状态，还没有执行任何节点); </li>
+<li>如果属性 <strong>P</strong> 对于某些执行为真，我们在执行结束时再添加一个时间步长，那么 <strong>P</strong> 在该时间步长之后仍然成立。</li>
+</ol>
+<p>换句话说，我们证明 <strong>P</strong> 在整个系统所有可能的状态中是一个不变量。在 Isabelle 里，这证明看起来是粗糙的像这个 ( <code>step</code>、 <code>init</code>、和  <code>procs</code>  被适当地定义过):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">theorem prove_invariant:</span><br><span class="line">  assumes ‹execute step init procs events msgs states›</span><br><span class="line">  shows ‹some_invariant states›</span><br><span class="line">using assms proof (induction events arbitrary: msgs states</span><br><span class="line">                   rule: List.rev_induct)</span><br><span class="line">  case Nil</span><br><span class="line">  then show ‹some_invariant states› sorry</span><br><span class="line">next</span><br><span class="line">  case (snoc event events)</span><br><span class="line">  then show ?case sorry</span><br><span class="line">qed</span><br></pre></td></tr></table></figure>
+<p>验证分布式算法的真正挑战是提出正确的不变量，它既是值为真又暗示了你希望算法具有的属性。不幸的是，必须手动设计这个不变量。然而，一旦你有了一个不变量作为候选，Isabelle 对检查它是否正确，以及它是否强大到可以满足你的目标非常有帮助。</p>
+<p>有关如何在此模型中证明简单共识算法的正确性的更多详细信息，我录制了一个<a href="https://www.youtube.com/watch?v=Uav5jWHNghY" target="_blank" rel="noopener">2 小时的视频讲座</a> ，该讲座贯穿了第一原理的演示（无需之前有 Isabelle 的经验）。这个<a href="https://gist.github.com/ept/b6872fc541a68a321a26198b53b3896b" target="_blank" rel="noopener">演示的 Isabelle 代码</a>也是可用的。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner" target="_blank" rel="noopener">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner" target="_blank" rel="noopener">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im" target="_blank" rel="noopener">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android" target="_blank" rel="noopener">Android</a>、<a href="https://github.com/xitu/gold-miner#ios" target="_blank" rel="noopener">iOS</a>、<a href="https://github.com/xitu/gold-miner#前端" target="_blank" rel="noopener">前端</a>、<a href="https://github.com/xitu/gold-miner#后端" target="_blank" rel="noopener">后端</a>、<a href="https://github.com/xitu/gold-miner#区块链" target="_blank" rel="noopener">区块链</a>、<a href="https://github.com/xitu/gold-miner#产品" target="_blank" rel="noopener">产品</a>、<a href="https://github.com/xitu/gold-miner#设计" target="_blank" rel="noopener">设计</a>、<a href="https://github.com/xitu/gold-miner#人工智能" target="_blank" rel="noopener">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner" target="_blank" rel="noopener">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi" target="_blank" rel="noopener">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi" target="_blank" rel="noopener">知乎专栏</a>。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/10/01/retries/" rel="next" title="(译)使用令牌桶和熔断器进行重试">
+                <i class="fa fa-chevron-left"></i> (译)使用令牌桶和熔断器进行重试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/12/01/implementing-bitcask-a-log-structured-hash-table/" rel="prev" title="(译)实现 Bitcask ，一种日志结构的哈希表">
+                (译)实现 Bitcask ，一种日志结构的哈希表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="刻羽">
+            
+              <p class="site-author-name" itemprop="name">刻羽</p>
+              <p class="site-description motion-element" itemprop="description">并非因为有了结束， 过程才具有意义。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wangxuanni" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="xiantang.info" title="咸糖" target="_blank">咸糖</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://zmosquito.github.io" title="蚊子" target="_blank">蚊子</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用-Isabelle-HOL-验证分布式系统"><span class="nav-number">1.</span> <span class="nav-text">用 Isabelle/HOL 验证分布式系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#在-Isabelle-HOL-中建模一个分布式系统"><span class="nav-number">1.1.</span> <span class="nav-text">在 Isabelle/HOL 中建模一个分布式系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么线性的时间步长序列就足够了？"><span class="nav-number">1.2.</span> <span class="nav-text">为什么线性的时间步长序列就足够了？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#去定义可能发生了什么"><span class="nav-number">1.3.</span> <span class="nav-text">去定义可能发生了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#证明一个算法正确性"><span class="nav-number">1.4.</span> <span class="nav-text">证明一个算法正确性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刻羽</span>
+
+  
+</div>
+
+
+  <div class="powered-by">  
+  </div>
+  <span>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
+</div>
+<!-- 
+<div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </footer></div>
+    
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: '8mVebIc8A5BSLnOwM58Kjqnm-gzGzoHsz',
+        appKey: 'gdBaeDvg94MR2FENCtcLLbIf',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，来玩啊!',
+        avatar:'',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":135,"height":150,"hOffset":86,"vOffset":35},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!-- ҳ����С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>

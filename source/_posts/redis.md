@@ -1,9 +1,8 @@
 ---
 title: 一文掌握redis
-date: 2019-09-01 16:36:50
+date: 2019-11-01 16:36:50
 categories: 秋招
 description: 写得比较完善的一篇笔记，应该有把握住一些重点。
-top: 9
 
 ---
 
@@ -220,11 +219,12 @@ sdown 达成的条件很简单，如果一个哨兵 ping 一个 master，超过�
 ### sentinel领导选举与法定人数
 
 。原因:只有一个sentinel节点完成故障转移
-。选举:通过sentinel is-master-down-by-addr命令都希望成为领导者
-    1,每个做主观下线的Sentinel节点向其他Sentinel节点发送命令,要求将它设置为领导者.
-    2,收到命令的Sentinel节点如果没有同意通过其他Sentinel节点发送命令,那么将同意该请求，否则拒绝
-    3,如果该Sentinel节点发现自己的票数已经超过Sentinel集合半数且超过quorum,那么它将成为领导者
-    4,如果此过程有多个Sentinel节点成为了领导者,那么将等待一段时间重新进行选举
+。选举:通过sentinel is-master-down-by-addr命令申请成为领导者
+
+1.    每个做主观下线的Sentinel节点向其他Sentinel节点发送命令,要求将它设置为领导者。
+2.    收到命令的Sentinel节点如果没有同意通过其他Sentinel节点发送命令,那么将同意该请求，否则拒绝。
+3.    如果该Sentinel节点发现自己的票数已经超过Sentinel集合半数且超过quorum,那么它将成为领导者。
+4.    如果此过程有多个Sentinel节点成为了领导者,那么将等待一段时间重新进行选举。
 
 备注：quorum可以在sentinel的conf里配置,后面的2就是法定人数
 

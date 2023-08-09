@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="V1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写http服务器（一）">
+<meta property="og:url" content="http://wangxuanni.top/2019/05/29/手写http服务器/index.html">
+<meta property="og:site_name" content="王轩妮">
+<meta property="og:description" content="V1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-02-08T07:09:41.228Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手写http服务器（一）">
+<meta name="twitter:description" content="V1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxuanni.top/2019/05/29/手写http服务器/">
+
+
+
+
+
+  <title>手写http服务器（一） | 王轩妮</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/wangxuanni"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">王轩妮</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2019/05/29/手写http服务器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">手写http服务器（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T10:44:16+08:00">
+                2019-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mytomcat/" itemprop="url" rel="index">
+                    <span itemprop="name">mytomcat</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/29/手写http服务器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/05/29/手写http服务器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7min
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  V1
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>这里默认读者是连http服务器是啥一点概念都没有（但是得有网络编程基础），会从最基本的概念讲起，一步步写一个服务器，大神就不要点进来看我献丑了hhh</p>
+</blockquote>
+<h1 id="版本全览"><a href="#版本全览" class="headerlink" title="版本全览"></a>版本全览</h1><p>版本一：基于bio百行代码实现http服务器<br>版本二：基于nio<br>版本三：serlevt容器、cookie、封装、日志<br>版本四：长连接、参考了tomcat设计</p>
+<h1 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h1><p><em>早在学jsp的时候，就很好奇tomcat是什么，为什么可以运行jsp、servlet？当时试图看业界盛誉的《how to tomcat work》，没看懂（但这确实是本神书）；问师兄，师兄也不太清楚。网上的博客就更不用说了。这个困惑就先被我放到一边去了。<br>寒假的时候用socket、多线程写了一个聊天室。突然明白，其实tomcat就像一个聊天室的服务器啊，浏览器相当于客户端，HTTP请求响应相当于聊天消息，浏览器给服务器发消息，服务器做处理。http报文只是遵守一定格式的字符串。<br>只不过聊天室的服务器是把收到的信息转发给其他客户端。而HTTP的服务的返回一个符合HTTP协议的消息。<br>最初的版本v1，只能把收到的HTTP报文打印到控制台，返回浏览器响应显示一句话。<br>后来发现github上比我大一两届的前辈也写过这个东西，但是他们有好多功能比如基于nio、servlet等等，像模像样。受到启发，这项目认真起来大有搞头。就有了把这个当成自己的一个项目去完善的心态。看了一些书、博客、视频。最近还发现群里的小伙伴也有在写这个的，此处点名糖糖。</em><br>写这个服务器的好处：</p>
+<ul>
+<li>写轮子所需几乎覆盖java所有知识点，因为即使是一个xml解析也要自己写，不像写后台一样有很多框架、工具可以用。</li>
+<li>成就感强。tomcat算比较适合自己造轮子的入门中间件。曾经也有写一个Spring的想法，但看了源码之后就放弃了。Spring源码优秀，适合参读，但不太适合自己撸一个。</li>
+<li>对后台开发的眼界会</li>
+</ul>
+<h1 id="V1"><a href="#V1" class="headerlink" title="V1"></a>V1</h1><h2 id="关键字：bio、百行代码内"><a href="#关键字：bio、百行代码内" class="headerlink" title="关键字：bio、百行代码内"></a>关键字：bio、百行代码内</h2><p><strong><em><a href="https://github.com/wangxuanni/MyTomcat/tree/master/src/v1/BioServer.java" target="_blank" rel="noopener">代码链接</a></em></strong></p>
+<h2 id="技术点"><a href="#技术点" class="headerlink" title="技术点"></a>技术点</h2><ul>
+<li>BIO</li>
+<li>Socket</li>
+<li>缓存线程池</li>
+<li>lambda表达式</li>
+<li>HTTP请求响应报文</li>
+</ul>
+<h2 id="5个步骤的关键代码"><a href="#5个步骤的关键代码" class="headerlink" title="5个步骤的关键代码"></a>5个步骤的关键代码</h2><p>一、开启服务器绑定端口<br><code>ServerSocket serverSocket = new ServerSocket(8080);</code><br>二、一直循环等待<br><code>while（true）{</code><br>三、收到请求的套接字<br><code>Socket socket = serverSocket.accept();</code><br>四、套接字可以获得一个字节输入流，把这个输入流转成字符串，打印在控制台。<br><code>InputStream inputStream = socket.getInputStream();</code><br>五、创建响应报文（其实就是按照HTTP报文的格式构建的一个字符串）并返回响应<br><code>BufferedWriter bw =new BufferedWriter(new 
+OutputStreamWriter(socket.getOutputStream()));</code></p>
+<h2 id="注意一些小坑"><a href="#注意一些小坑" class="headerlink" title="注意一些小坑"></a>注意一些小坑</h2><p>缓存字符流写入后记得要刷新！！！bw.flush();<br>选择缓存线程池是因为它更适合短连接。<br>构建响应报文用StringBuilder比String更好<br>响应报文正文要构建好并且要记录长度，因为响应头有一个Content-length:正文长度属性要填<br>记得在finally块把socket.close()关闭</p>
+<h1 id="V2"><a href="#V2" class="headerlink" title="V2"></a>V2</h1><h2 id="关键字：NIO"><a href="#关键字：NIO" class="headerlink" title="关键字：NIO"></a>关键字：NIO</h2><p>这个版本主要从bio升级为nio。<br><strong><em><a href="https://github.com/wangxuanni/MyTomcat/tree/master/src/v2" target="_blank" rel="noopener">代码链接</a></em></strong><br>v2<br>最重要是弄懂nio是时候掏出我之前的bio、nio笔记了。</p>
+<h3 id="bio"><a href="#bio" class="headerlink" title="bio"></a>bio</h3><p>先讲一下bio抛砖引玉，主要是为了和nio做对比。</p>
+<h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h4><p>阻塞并同步。特点是IO两个阶段被阻塞。基于流模型。<br>客户端一个请求服务端就启动一个线程，线序发生请求给内核，由内核去通信，在内核准备好数据之前，线程是被挂起的，知道数据从内核复制到用户空间。调用是可靠的线性顺序<br>缺点：每次请求创建一个线程在销毁开销比较大，操作系统对线程的总数有限制，太多服务器可能瘫痪。可以用线程池改进。<br>创建bio服务器只需要一步。</p>
+<h4 id="2-配置服务器"><a href="#2-配置服务器" class="headerlink" title="2.配置服务器"></a>2.配置服务器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一、ServerSocket serverSocket = new ServerSocket(8080);</span><br></pre></td></tr></table></figure>
+<h4 id="3-处理请求返回响应"><a href="#3-处理请求返回响应" class="headerlink" title="3.处理请求返回响应"></a>3.处理请求返回响应</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">二、一直循环等待</span><br><span class="line">`while（true）&#123;</span><br><span class="line">三、收到请求的套接字</span><br><span class="line">`Socket socket = serverSocket.accept();`</span><br><span class="line">四、用套接字得到输入输出流，处理请求响应</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="nio"><a href="#nio" class="headerlink" title="nio"></a>nio</h3><h4 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h4><p>非阻塞并同步。可构建多路复用、同步非阻塞的io操作。特点是程序去不断询问内核是否准备好，基于buffers。<br>客户端请求会注册到多路复用上，单线程轮询到有io请求时，才启动一个线程进行处理，仅仅selector是阻塞的。<br>核心：Channels（类似流，全双工，可以读写。socketChannel、serverSocketChannel）<br>buffers8种基本类型都有，数据从channel读到buffer中，也可以从buffer写到channel。本质是一块方便读写数据的内存<br>selector多路复用器，以监听多个Channel通道感兴趣的事情。允许单线程处理多个channel。 </p>
+<ul>
+<li>OP_ACCEPT: 接收就绪</li>
+<li>OP_READ: 读取就绪</li>
+<li>OP_WRITE: 写入就绪</li>
+<li>OP_CONNECT: 连接就绪</li>
+</ul>
+<p>一个server socket channel准备好接收新进入的连接称为“接收就绪”。某个channel成功连接到另一个服务器称为“连接就绪”。一个有数据可读的通道可以说是“读就绪”。等待写数据的通道可以说是“写就绪”。<br>所以只有OP_ACCEPT: 接收就绪是serviceSocketChannel使用的，其他三个都是socketChannel使用。</p>
+<h4 id="2-配置服务器-1"><a href="#2-配置服务器-1" class="headerlink" title="2.配置服务器"></a>2.配置服务器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">     /**</span><br><span class="line">         * 1. 创建Selector</span><br><span class="line">         */</span><br><span class="line">        Selector selector = Selector.open();</span><br><span class="line">        /**</span><br><span class="line">         * 2. 通过ServerSocketChannel创建channel通道</span><br><span class="line">         */</span><br><span class="line">        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</span><br><span class="line">        /**</span><br><span class="line">         * 3. 为channel通道绑定监听端口</span><br><span class="line">         */</span><br><span class="line">        serverSocketChannel.bind(new InetSocketAddress(8000));</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 4. **设置channel为非阻塞模式**</span><br><span class="line">         */</span><br><span class="line">        serverSocketChannel.configureBlocking(false);</span><br><span class="line">        /**</span><br><span class="line">         * 5. 将channel注册到selector上，监听连接事件</span><br><span class="line">         */</span><br><span class="line">        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line">        System.out.println(&quot;服务器启动成功！&quot;);</span><br></pre></td></tr></table></figure>
+<p>总结一下上面代码，创建多路复用器，创建ServerSocketChannel，简称ssc，ssc绑定端口并设置为非阻塞，将ssc注册到多路复用器上，监听连接事件。到这里服务器已经配置好了。</p>
+<h4 id="3-处理请求返回响应-1"><a href="#3-处理请求返回响应-1" class="headerlink" title="3.处理请求返回响应"></a>3.处理请求返回响应</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line">    while (true) &#123;</span><br><span class="line">    int readyChannels = selector.select();</span><br><span class="line">    if (readyChannels == 0) &#123;</span><br><span class="line">        continue;</span><br><span class="line">    &#125;</span><br><span class="line">    Set&lt;SelectionKey&gt; selectionKeys = selector.selectedKeys();</span><br><span class="line">    Iterator iterator = selectionKeys.iterator();</span><br><span class="line"></span><br><span class="line">    while (iterator.hasNext()) &#123;</span><br><span class="line"></span><br><span class="line">        SelectionKey selectionKey = (SelectionKey) iterator.next();</span><br><span class="line"></span><br><span class="line">        if (selectionKey.isAcceptable()) &#123;</span><br><span class="line">            SocketChannel socketChannel = serverSocketChannel.accept();</span><br><span class="line">            socketChannel.configureBlocking(false);</span><br><span class="line">            socketChannel.register(selector, SelectionKey.OP_READ);</span><br><span class="line"></span><br><span class="line">            Response response = new Response(socketChannel);</span><br><span class="line"></span><br><span class="line">            response.print(&quot;&lt;html&gt;&quot;);</span><br><span class="line">            response.print(&quot;&lt;head&gt;&quot;);</span><br><span class="line">            response.print(&quot;&lt;title&gt;&quot;);</span><br><span class="line">            response.print(&quot;服务器响应成功&quot;);</span><br><span class="line">            response.print(&quot;&lt;/title&gt;&quot;);</span><br><span class="line">            response.print(&quot;&lt;/head&gt;&quot;);</span><br><span class="line">            response.print(&quot;&lt;body&gt;&quot;);</span><br><span class="line">            response.print(&quot;来而不往非礼也&quot;);</span><br><span class="line">            response.print(&quot;&lt;/body&gt;&quot;);</span><br><span class="line">            response.print(&quot;&lt;/html&gt;&quot;);</span><br><span class="line"></span><br><span class="line">            response.pushToBrowser(200);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (selectionKey.isReadable()) &#123;</span><br><span class="line">            Request request = new Request(selectionKey);</span><br><span class="line">        &#125;</span><br><span class="line">        iterator.remove();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h4><p>循环询问多路复用器的selectedKeys是否有值，等待连接事件<br>当有连接事件过来了，创建socketChannel<br>将socketChannel设置为非阻塞工作模式<br>将channel注册回selector上，监听<strong>可读事件</strong><br>创建Response并传入socketChannel，在Response里socketChannel.write();返回响应</p>
+<p>如果是可读事件，把selectionKey传入Request解析请求，Request类首先selectionKey里获取socketChannel（就之前接入事件创建的socketChannel），然后创建byteBuffer，用于读取客户端请求信息。</p>
+<h4 id="5-其他"><a href="#5-其他" class="headerlink" title="5.其他"></a>5.其他</h4><p>Selector、ServerSocketChannel本身为抽象类，不能直接创建,需要通过open()方法打开。<br>注意这段代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (readyChannels == 0) &#123;</span><br><span class="line">           continue;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后献上教程，关于nio，<a href="http://www.imooc.com/learn/1118" target="_blank" rel="noopener">慕课有一个特别好的教程</a>，老师讲的很清楚。</p>
+<h1 id="V3"><a href="#V3" class="headerlink" title="V3"></a>V3</h1><p>进行封装 request接受请求并打印。<br>response根据传入的状态码封装固定的头信息、推送响应信息。<br>server类只关心内容和状态码.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/26/线程池详解/" rel="next" title="java线程池详解">
+                <i class="fa fa-chevron-left"></i> java线程池详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/26/一刷剑指offer/" rel="prev" title="小记">
+                小记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="刻羽">
+            
+              <p class="site-author-name" itemprop="name">刻羽</p>
+              <p class="site-description motion-element" itemprop="description">并非因为有了结束， 过程才具有意义。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wangxuanni" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="xiantang.info" title="咸糖" target="_blank">咸糖</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://zmosquito.github.io" title="蚊子" target="_blank">蚊子</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本全览"><span class="nav-number">1.</span> <span class="nav-text">版本全览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#起源"><span class="nav-number">2.</span> <span class="nav-text">起源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V1"><span class="nav-number">3.</span> <span class="nav-text">V1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关键字：bio、百行代码内"><span class="nav-number">3.1.</span> <span class="nav-text">关键字：bio、百行代码内</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术点"><span class="nav-number">3.2.</span> <span class="nav-text">技术点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5个步骤的关键代码"><span class="nav-number">3.3.</span> <span class="nav-text">5个步骤的关键代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意一些小坑"><span class="nav-number">3.4.</span> <span class="nav-text">注意一些小坑</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V2"><span class="nav-number">4.</span> <span class="nav-text">V2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关键字：NIO"><span class="nav-number">4.1.</span> <span class="nav-text">关键字：NIO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bio"><span class="nav-number">4.1.1.</span> <span class="nav-text">bio</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-概念"><span class="nav-number">4.1.1.1.</span> <span class="nav-text">1.概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-配置服务器"><span class="nav-number">4.1.1.2.</span> <span class="nav-text">2.配置服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-处理请求返回响应"><span class="nav-number">4.1.1.3.</span> <span class="nav-text">3.处理请求返回响应</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nio"><span class="nav-number">4.1.2.</span> <span class="nav-text">nio</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-概念-1"><span class="nav-number">4.1.2.1.</span> <span class="nav-text">1.概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-配置服务器-1"><span class="nav-number">4.1.2.2.</span> <span class="nav-text">2.配置服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-处理请求返回响应-1"><span class="nav-number">4.1.2.3.</span> <span class="nav-text">3.处理请求返回响应</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-总结"><span class="nav-number">4.1.2.4.</span> <span class="nav-text">4.总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-其他"><span class="nav-number">4.1.2.5.</span> <span class="nav-text">5.其他</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V3"><span class="nav-number">5.</span> <span class="nav-text">V3</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刻羽</span>
+
+  
+</div>
+
+
+  <div class="powered-by">  
+  </div>
+  <span>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
+</div>
+<!-- 
+<div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </footer></div>
+    
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: '8mVebIc8A5BSLnOwM58Kjqnm-gzGzoHsz',
+        appKey: 'gdBaeDvg94MR2FENCtcLLbIf',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，来玩啊!',
+        avatar:'',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":135,"height":150,"hOffset":86,"vOffset":35},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!-- ҳ����С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
