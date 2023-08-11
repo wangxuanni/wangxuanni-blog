@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e75b6d5d-3fd8-486a-b7cb-5d50713bdf40" name="Default Changelist" comment="commit">
-      <change afterPath="$PROJECT_DIR$/source/_posts/implementing-bitcask-a-log-structured-hash-table.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/retries.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/verifying-distributed-systems-isabelle.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/自英-redis的zset可以做哪些有趣的事？.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/_posts/英文-redis的zset可以做哪些有趣的事？.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/LINUX查看日志利器.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/git.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/redis.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/redis.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/后端项目常用注解.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/我的编程之路1.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/我的编程之路1.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/提升开发效率的技巧.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/about/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/about/index.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" afterPath="$PROJECT_DIR$/db.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +119,7 @@
       <workItem from="1670494040229" duration="2143000" />
       <workItem from="1670601502584" duration="14000" />
       <workItem from="1673008287052" duration="1215000" />
-      <workItem from="1691581213258" duration="1912000" />
+      <workItem from="1691581213258" duration="4135000" />
     </task>
     <task id="LOCAL-00001" summary="commit">
       <created>1646035324520</created>
