@@ -5,8 +5,6 @@ categories: 算法
 top: 10
 ---
 
-mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。
-<!-- more -->
 
 回想一下咱使用mybatis的时候，只定义了操作表的接口以及方法，并没有定义接口的实现类，一行jdbc代码都没写，就可以对数据库增删查改。哪有什么岁月静好，不过是有人替你负重前行。是勤恳的mybatis帮我们做了实现类，写了jdbc代码，并把mapper里的sql注入进去了。
 
