@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e75b6d5d-3fd8-486a-b7cb-5d50713bdf40" name="Default Changelist" comment="commit">
-      <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" afterPath="$PROJECT_DIR$/db.json" afterDir="false" />
-    </list>
+    <list default="true" id="e75b6d5d-3fd8-486a-b7cb-5d50713bdf40" name="Default Changelist" comment="commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -119,7 +117,17 @@
       <workItem from="1670494040229" duration="2143000" />
       <workItem from="1670601502584" duration="14000" />
       <workItem from="1673008287052" duration="1215000" />
-      <workItem from="1691581213258" duration="4511000" />
+      <workItem from="1691581213258" duration="5559000" />
+      <workItem from="1691828366128" duration="35000" />
+      <workItem from="1691979977160" duration="597000" />
+      <workItem from="1692153284249" duration="202000" />
+      <workItem from="1692342848151" duration="2408000" />
+      <workItem from="1692778911363" duration="599000" />
+      <workItem from="1692804130377" duration="597000" />
+      <workItem from="1694483758368" duration="449000" />
+      <workItem from="1695026751735" duration="2018000" />
+      <workItem from="1695260249105" duration="598000" />
+      <workItem from="1711458394695" duration="626000" />
     </task>
     <task id="LOCAL-00001" summary="commit">
       <created>1646035324520</created>
@@ -144,11 +152,41 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />
           </value>
         </entry>
+      </map>
+    </option>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="1" value="TOOL_WINDOW" />
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
