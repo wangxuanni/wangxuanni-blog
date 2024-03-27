@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="实习时候的笔记，分为四部分：linux常用命令、Git使用总结、框架常用注解、提升开发效率的技巧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实习笔记——开发技巧">
+<meta property="og:url" content="http://wangxuanni.top/2019/11/25/实习笔记——开发技巧/index.html">
+<meta property="og:site_name" content="王轩妮">
+<meta property="og:description" content="实习时候的笔记，分为四部分：linux常用命令、Git使用总结、框架常用注解、提升开发效率的技巧">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2024-03-27T08:52:13.592Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实习笔记——开发技巧">
+<meta name="twitter:description" content="实习时候的笔记，分为四部分：linux常用命令、Git使用总结、框架常用注解、提升开发效率的技巧">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wangxuanni.top/2019/11/25/实习笔记——开发技巧/">
+
+
+
+
+
+  <title>实习笔记——开发技巧 | 王轩妮</title>
+  
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/wangxuanni"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">王轩妮</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2019/11/25/实习笔记——开发技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">实习笔记——开发技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-25T20:09:50+08:00">
+                2019-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工程技巧/" itemprop="url" rel="index">
+                    <span itemprop="name">工程技巧</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/25/实习笔记——开发技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/11/25/实习笔记——开发技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18min
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  实习时候的笔记，分为四部分：linux常用命令、Git使用总结、框架常用注解、提升开发效率的技巧
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[TOC]</p>
+<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><p>常用命令</p>
+<p><a href="https://www.runoob.com/w3cnote/linux-common-command-2.html" target="_blank" rel="noopener">菜鸟教程常用命令</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">切换目录</span><br><span class="line">cd /usr查看目录下的文件lsls -lh 遍历详细信息，如权限，所属用户，创建日期，大小等等信息</span><br><span class="line">查看当前所处目录pwd</span><br><span class="line">创建目录文件mkdir -p /test/abctouch test.java</span><br><span class="line">删除文件</span><br><span class="line">rm -f test.java</span><br><span class="line">vi abc.txt要进行编辑，要输入 a 或者 i ，才可以进行编辑哦</span><br><span class="line">要退出，首先要离开当前的编辑模式，点击左上角的ESC键，退出编辑模式然后输入冒号 (shift+分号) 打开控制命令接着输入wq，然后敲回车，即保存退出wq 是quit+write的缩写</span><br></pre></td></tr></table></figure>
+<h3 id="grep搜索文本，支持正则"><a href="#grep搜索文本，支持正则" class="headerlink" title="grep搜索文本，支持正则"></a>grep搜索文本，支持正则</h3><h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">grep [-acinv] [--color=auto] &apos;搜寻字符串&apos; filename</span><br><span class="line">-a：将binary文件以text文件的方式搜寻数据</span><br><span class="line">-c：计算找到&apos;搜寻字符串&apos;的次数</span><br><span class="line">-i：忽略大小写</span><br><span class="line">-n：顺便输出行号</span><br><span class="line">-v：反向选择，即输出没有&apos;搜索字符串&apos;的内容</span><br><span class="line">--color=auto：可以将找到的关键词部分加上颜色显示</span><br><span class="line">-A 5：可以显示前面5行加上查找行的信息</span><br><span class="line">-B 5：可以显示后面5行加上查找行的信息</span><br><span class="line">-C 5：可以显示前后5行加上查找行的信息</span><br></pre></td></tr></table></figure>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p> <code>grep 2017010500345878 --color info.log</code></p>
+<p>这行命令在info.log中搜索含有”2017010500345878”关键词的段落并且使用其他颜色标记关键词。<br>复制代码</p>
+<p><code>grep -v &#39;ERROR&#39; error.log</code> 查找不含”ERROR”的行</p>
+<p><code>grep -C 50 &quot;关键字&quot; info.log</code></p>
+<h3 id="less分页查看，比more更强"><a href="#less分页查看，比more更强" class="headerlink" title="less分页查看，比more更强"></a>less分页查看，比more更强</h3><p><code>ps -ef |less</code></p>
+<p>ps查看进程信息并通过less分页显示</p>
+<p>搭配grep使用</p>
+<p><code>less -N tomcat_stdout.log|grep job</code><br><code>less xxx.log | grep -i -n -C10 --color=auto xx</code></p>
+<p>有用的命令</p>
+<ul>
+<li>按F,监控更新.如果要暂停监控，可以CTRL+C.</li>
+<li>/字符串：搜索“字符串”的功能</li>
+<li>G:调到文本末尾</li>
+<li>空格键 滚动一页</li>
+<li>回车键 滚动一行</li>
+<li>Q: 退出</li>
+<li>gg: 调到文本最前面</li>
+<li>按v进入编辑模式，可以类似于vim的方式来编辑保存文件了</li>
+</ul>
+<p>其他有用的命令</p>
+<p>1.全屏导航</p>
+<ul>
+<li>ctrl + F - 向前移动一屏forward</li>
+<li>ctrl + B - 向后移动一屏backward</li>
+<li>ctrl + D - 向前移动半屏</li>
+<li>ctrl + U - 向后移动半屏</li>
+</ul>
+<p>2.单行导航</p>
+<ul>
+<li>j - 向前移动一行</li>
+<li>k - 向后移动一行</li>
+</ul>
+<p>3.其它导航</p>
+<ul>
+<li>G - 移动到最后一行</li>
+<li>g - 移动到第一行</li>
+<li>q / ZZ - 退出 less 命令</li>
+</ul>
+<p>4.标记导航</p>
+<p>当使用 less 查看大文件时，可以在任何一个位置作标记，可以通过命令导航到标有特定标记的文本位置：</p>
+<ul>
+<li>ma - 使用 a 标记文本的当前位置</li>
+<li>‘a - 导航到标记 a 处</li>
+</ul>
+<h3 id="vi编辑文本"><a href="#vi编辑文本" class="headerlink" title="vi编辑文本"></a>vi编辑文本</h3><blockquote>
+<p>使用找一个字符串，在vi命令模式下键入“/”，后面跟要查找的字符串，再按回车。vi将光标定位在该串下一次出现的地方上。键入n跳到该串的下一个出现处，键入N跳到该串的上一个出现处。</p>
+</blockquote>
+<h3 id="tail查看文件后面几行，默认尾10行，可实时更新"><a href="#tail查看文件后面几行，默认尾10行，可实时更新" class="headerlink" title="tail查看文件后面几行，默认尾10行，可实时更新"></a>tail查看文件后面几行，默认尾10行，可实时更新</h3><p><strong>-f 关键字，tail 会自动实时更新文件内容。</strong></p>
+<p><code>tail -f [logfile]</code></p>
+<p><code>tail -n +100 [logfile]</code> </p>
+<p>查询从日志文件的第100行开始</p>
+<p><code>tail -n 100 [logfile] | grep &#39;结果&#39; --color</code>   </p>
+<p>–color是查询结果带颜色</p>
+<h3 id="head查看文件前面几行-默认前10行"><a href="#head查看文件前面几行-默认前10行" class="headerlink" title="head查看文件前面几行,默认前10行;"></a>head查看文件前面几行,默认前10行;</h3><p> <code>head -50 info.log</code> </p>
+<p>查看info.log文件的前50行。</p>
+<p><code>head -n -100 [logfile]</code></p>
+<p>查询日志文件除了最后10行的其他所有日志</p>
+<h3 id="cat查看文件"><a href="#cat查看文件" class="headerlink" title="cat查看文件"></a>cat查看文件</h3><p>常用有三大功能:</p>
+<ul>
+<li>1.一次显示整个文件;</li>
+<li>2.从键盘创建一个文件。</li>
+<li>3.将几个文件合并为一个文件。</li>
+</ul>
+<p><strong>-n 可以显示行号</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n test.log |tail -n +63820|head -n 20</span><br></pre></td></tr></table></figure>
+<p>tail -n +63820表示查询63820行之后的日志<br>head -n 20 则表示在前面的查询结果里再查前20条记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n info.log |grep &quot;关键字&quot; |more</span><br></pre></td></tr></table></figure>
+<p>这样就分页打印了,通过点击空格键翻页</p>
+<h3 id="sed编辑文件"><a href="#sed编辑文件" class="headerlink" title="sed编辑文件"></a>sed编辑文件</h3><ul>
+<li>常见使用方法之: sed -n ‘800,900’ info.log</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">查看info.log文件800到900行之间的内容</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<h3 id="常见组合使用"><a href="#常见组合使用" class="headerlink" title="常见组合使用"></a>常见组合使用</h3><blockquote>
+<p>使用[grep -n 异常 –color info.log ]查询到异常在文件中发生的行数,然后再看前后几十行日志的内容[sed -n ‘800,900’ info.log].</p>
+</blockquote>
+<h1 id="Git使用总结"><a href="#Git使用总结" class="headerlink" title="Git使用总结"></a>Git使用总结</h1><h2 id="add与commit"><a href="#add与commit" class="headerlink" title="add与commit"></a>add与commit</h2><p>首先，选择一个合适的地方，创建一个空目录</p>
+<p>通过<code>git init</code>命令把这个目录变成Git可以管理的仓库。可以发现当前目录下多了一个<code>.git</code>的目录，这个目录是Git来跟踪管理版本库的。</p>
+<p>第一步，用命令<code>git add</code>告诉Git，把文件添加到仓库：</p>
+<p>第二步，用命令<code>git commit</code>告诉Git，把文件提交到仓库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add readme.txt</span><br><span class="line">git commit -m &quot;wrote a readme file&quot;</span><br></pre></td></tr></table></figure>
+<p>为什么Git添加文件需要<code>add</code>，<code>commit</code>一共两步呢？因为<code>commit</code>可以一次提交很多文件，所以你可以多次<code>add</code>不同的文件,也可以对一个文件进行不同更改</p>
+<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p><code>git log</code>命令显示从最近到最远的提交日志，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --pretty=oneline</span><br></pre></td></tr></table></figure>
+<p>在Git中，用<code>HEAD</code>表示当前版本，上一个版本就是<code>HEAD^</code>，上上一个版本就是<code>HEAD^^</code>，当然往上100个版本写100个<code>^</code>比较容易数不过来，所以写成<code>HEAD~100</code>。</p>
+<p>如果回到了原来的版本，git log看不到之前最新的提交记录了，但是git reflog还可以。只有知道版本号，就可还原之前的任何一个版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD^</span><br><span class="line">git reset --hard 1094a</span><br></pre></td></tr></table></figure>
+<p><code>git add</code>命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行<code>git commit</code>就可以一次性把暂存区的所有修改提交到分支。一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的。</p>
+<p><code>git status</code>可以查看一下状态，如果工作区进行了修改有没有add就会显示Untracked files</p>
+<p>一个重要的概念是:Git跟踪并管理的是修改，而非文件。把文件git add readme.txt添加到了暂存区，暂存区也只是跟踪了这次修改，而不是跟踪了这个文件。换句话说：add不是一劳永逸之后对这个文件的更改都会被commit。如果再对readme.txt进行修改，就需要在进行一次git add，如果不再add，commit提交就不会提交这次修改。<strong>简而言之：每次修改都要进行git add。</strong></p>
+<p>删除文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git rm test.txt</span><br><span class="line">git commit -m &quot;remove test.txt&quot;</span><br></pre></td></tr></table></figure>
+<p>如果是误删，版本库里还有，想恢复.<code>git checkout</code>其实是用版本库里的<strong>最新</strong>版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- test.txt</span><br></pre></td></tr></table></figure>
+<h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><p>切换分支和撤销修改是同一个关键词checkout，确实有点令人迷惑，不过切换分支的checkout也可以用switch替换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b dev #创建并切换到dev分支</span><br><span class="line">git checkout master #切换回master分支</span><br><span class="line">git merge dev #在master分支上合并dev</span><br><span class="line">git branch -d dev #删除dev分支</span><br><span class="line">git branch #查看分支</span><br></pre></td></tr></table></figure>
+<h2 id="分支合并"><a href="#分支合并" class="headerlink" title="分支合并"></a>分支合并</h2><p>在实习的时候我经常遇到这样尴尬的情况</p>
+<p>比如：commit提交到本地分支了，切换到远程分支全没有了。解决办法：把本地和远程的分支和一下。</p>
+<p>再比如：在我的分支上明明有的方法，与其他的预发分支合并也没问题。发上去应用构建居然报错找不方法？？？原来是别人发布了一次，此时主分支就和我不一样了。本地分支当然能看到该方法，切到构建分支发现并没有这个方法。解决办法：把我的分支和主分支合并一下</p>
+<p>再再比如：</p>
+<p>Commit之后切换分支了，就commit不了，显示没有变更。解决方法：嘿嘿还是分支合并就vans了，惊不惊喜意不意外？</p>
+<p>那么问题来了，怎么万无一失的合并分支，并手动解决冲突？</p>
+<ol>
+<li><p>git fetch</p>
+</li>
+<li><p>git checkout 分支一</p>
+</li>
+<li><p>git merge origin/分支二417c909ab76eb47c8fc033479904544054e8ea0e</p>
+</li>
+<li><p>解决冲突，有一些会自动合并，必须手动解决的会在控制台输入什么类。加上<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>，<code>=======</code>，<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>这种，跟着报错提示很容易找到地方。</p>
+</li>
+<li><p>git add -u  记得重新add一下否则会提示冲突没有解决</p>
+</li>
+<li><p>git commit -m ‘XXXXX’</p>
+</li>
+<li><p>git push</p>
+</li>
+</ol>
+<p>​    </p>
+<p>   git log –graph –pretty=oneline –abbrev-commit可以查看分支合并情况。</p>
+<p>   顺便说一下pull和fetch的区别</p>
+<p><code>*git fetch</code>是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中。*</p>
+<p><em>而<code>git pull</code> 则是将远程主机的最新内容拉下来后直接合并，即：<code>git pull = git fetch + git merge</code>，这样可能会产生冲突，需要手动解决。</em></p>
+<p>快速和并是看不出来曾经做过合并，禁用<code>Fast forward</code>模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-ff -m &quot;merge with no-ff&quot; dev</span><br></pre></td></tr></table></figure>
+<h2 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h2><p>bug分支，工作写到一半还不能提交，但是bug得马上先修的尴尬局面。</p>
+<ol>
+<li>git stash可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作：</li>
+<li><code>git checkout -b issue-101</code>在修复bug的分支上创建临时bug分支</li>
+<li>修完后add+提交，切换会原来的分支，合并，最后删除<code>issue-101</code>分支。</li>
+<li><code>git stash list</code>查看之前储藏起来的内容。用<code>git stash apply</code>或者<code>git stash pop</code>，恢复，后者会在恢复的同时删除stash。（list中的id号可以让你恢复指定的stash）</li>
+<li>如果其他分支也有该bug，git cherry-pick 4c805e2，<code>cherry-pick</code>能复制一个特定的提交到当前分支：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br></pre></td></tr></table></figure>
+<p>如果要丢弃一个没有被合并过的分支，可以通过<code>git branch -D &lt;name&gt;</code>强行删除。</p>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h2><p>code review已提交的代码，点击主分支右键compare with current。</p>
+<p>强烈推荐这个教程，深入浅出.<br><a href="https://backlog.com/git-tutorial/cn/stepup/stepup7_5.html" target="_blank" rel="noopener">https://backlog.com/git-tutorial/cn/stepup/stepup7_5.html</a></p>
+<h1 id="框架常用注解"><a href="#框架常用注解" class="headerlink" title="框架常用注解"></a>框架常用注解</h1><h2 id="spring"><a href="#spring" class="headerlink" title="spring"></a>spring</h2><p>## </p>
+<h3 id="bean的注册"><a href="#bean的注册" class="headerlink" title="bean的注册"></a>bean的注册</h3><p>两种办法.</p>
+<h4 id="一、-Component或其派生-Controller-Service-Repository注解"><a href="#一、-Component或其派生-Controller-Service-Repository注解" class="headerlink" title="一、@Component或其派生 @Controller, @Service, @Repository注解"></a>一、@Component或其派生 @Controller, @Service, @Repository注解</h4><ul>
+<li><p>位置: 注解在类上</p>
+</li>
+<li><p>参数: 默认的bean的ID为首字母变为小写的类名</p>
+</li>
+<li><p>作用域: </p>
+<ul>
+<li><p>通过上述四个注解标识的 Bean，其默认作用域是”singleton”。</p>
+<p>如果不想是单例，使用@Scope 注解。只需提供作用域的名称就行了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Scope</span>(<span class="string">"prototype"</span>) </span><br><span class="line"><span class="meta">@Repository</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123; … &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>@ComponentScan</p>
+<ul>
+<li>作用: @ComponentScan对应XML配置形式中的&lt;context: component-scan&gt;元素, 用于配合一些元信息 Java Annotation,比如@Component和@Repository等, 将标注了这些元信息 Annotation 的 bean 定义类批量采集到 Spring 的IoC容器中, 我们可以通过 basePackages等属性来细粒度地定制 @ComponentScan自动扫描的范围, 如果不指定, 则默认 Spring框架实现会从声明 @ComponentScan所在类的 package 进行扫描。</li>
+</ul>
+<h4 id="二、使用-Configuration-搭配-Bean注解。"><a href="#二、使用-Configuration-搭配-Bean注解。" class="headerlink" title="二、使用@Configuration 搭配 @Bean注解。"></a>二、使用@Configuration 搭配 @Bean注解。</h4><p> <strong>常用在配置第三方提供的bean.</strong></p>
+<ul>
+<li><ul>
+<li>@Configuration<ul>
+<li>位置: 注解在类上</li>
+<li>作用: 声明当前类是一个配置类，相当于一个Spring配置的xml文件, 任何POJO+@Configuration都是一个JavaConfig配置类。 @Configuration也是一个@Component</li>
+</ul>
+</li>
+<li>@Bean<ul>
+<li>位置: 注解在方法上</li>
+<li>作用: 声明当前方法的返回值为一个Bean。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 @Configuration + @Bean 配置一个Tesla Service</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeslaServiceConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span>(name = <span class="string">"userService"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> UserService <span class="title">userService</span><span class="params">()</span> <span class="keyword">throws</span> TeslaException </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> TeslaServiceConsumerFactory.getTeslaServiceConsumer(UserService.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="bean的获取"><a href="#bean的获取" class="headerlink" title="bean的获取"></a>bean的获取</h3><p>@<strong>Autowired</strong> 搭配 @Qualifier 或者 @<strong>Resource</strong></p>
+<p>@Resource和@Autowired使用起来区别不大, @Autowired优先byType装配, @Resource优先byName装配, <a href="http://www.dengshenyu.com/spring/2016/10/09/spring-inject.html" target="_blank" rel="noopener">更多参考这里</a></p>
+<h4 id="Autowired-required-false-找不到也没关系"><a href="#Autowired-required-false-找不到也没关系" class="headerlink" title="@Autowired(required = false)找不到也没关系"></a>@Autowired(required = false)找不到也没关系</h4><p>问：如果属性注入找不到我不想让Spring容器抛出异常，而就是显示null，可以吗？答：将@Autowired注解的required属性设置为false即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">` <span class="meta">@Autowired</span>(required = <span class="keyword">false</span>)</span><br><span class="line">    <span class="keyword">private</span> Car car;`</span><br></pre></td></tr></table></figure>
+<h4 id="Qualifier-“BMW”-接口有多个实现拿哪一个"><a href="#Qualifier-“BMW”-接口有多个实现拿哪一个" class="headerlink" title="@Qualifier(“BMW”)接口有多个实现拿哪一个"></a>@Qualifier(“BMW”)接口有多个实现拿哪一个</h4><p>问：一个Car接口有两个个实现，类Benz和BMW，要怎么拿？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">    <span class="meta">@Qualifier</span>(<span class="string">"BMW"</span>)</span><br><span class="line">    <span class="keyword">private</span> Car car;</span><br></pre></td></tr></table></figure>
+<p>@Autowired + @Qualifier(“foo”)  等同于 @Resource(name=”foo”)</p>
+<h2 id="bean生命周期"><a href="#bean生命周期" class="headerlink" title="bean生命周期"></a>bean生命周期</h2><p>在某些情况下，可能需要我们手工做一些额外的初始化或者销毁操作，这通常是针对一些资源的获取和释放操作。</p>
+<p>Bean的生命周期 @Scope @PostConstruct 和 @PreDestroy </p>
+<h3 id="Scope指定bean的作用域"><a href="#Scope指定bean的作用域" class="headerlink" title="@Scope指定bean的作用域."></a>@Scope指定bean的作用域.</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) or @Scope(&quot;prototype&quot;)</span><br></pre></td></tr></table></figure>
+<h3 id="生命周期的钩子"><a href="#生命周期的钩子" class="headerlink" title="生命周期的钩子"></a>生命周期的钩子</h3><ul>
+<li>initMethod &amp; destroyMethod<ul>
+<li>位置: 与@Bean搭配使用</li>
+<li>作用: 指定bean的生命周期回调方法, bean实例化后, bean销毁前</li>
+<li>例子: @Bean(initMethod=”init”,destroyMethod=”destory”)</li>
+</ul>
+</li>
+<li>@PostConstruct &amp; @PreDestroy<ul>
+<li>位置: 与@Component搭配使用, 注解在方法上</li>
+<li>作用: 指定bean的生命周期回调方法, bean实例化后, bean销毁前</li>
+<li>例子: @PostConstruct public void init() {}</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @PostConstruct &amp; @PreDestroy 示例</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@PostConstruct</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@PreDestroy</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Value去配置文件取值"><a href="#Value去配置文件取值" class="headerlink" title="@Value去配置文件取值"></a>@Value去配置文件取值</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;env&#125;"</span>)  </span><br><span class="line"><span class="keyword">private</span> String env;</span><br></pre></td></tr></table></figure>
+<p>除了spring的application.properties，还会发现应用里对每一个环境都有不同的配置文件，诸如dev_config.properties、online_config.properties。</p>
+<p>@Value取值先去application.properties，如果配置文件以@开头结尾，如env=@env@，则根据当前环境去对应的配置文件里取</p>
+<h2 id="SpringBoot"><a href="#SpringBoot" class="headerlink" title="SpringBoot"></a>SpringBoot</h2><ul>
+<li>@SpringBootApplication<ul>
+<li>@Configuration<ul>
+<li>启动类标注了@Configuration之后,本身其实也是一个IoC容器的配置类</li>
+</ul>
+</li>
+<li>@EnableAutoConfiguration<ul>
+<li>从classpath中搜索所有META-INF/spring.factories配置文件, 加载配置到spring容器</li>
+<li>比如moguboot的spring.factories就配置了很多内部中间件</li>
+</ul>
+</li>
+<li>@ComponentScan</li>
+</ul>
+</li>
+</ul>
+<h2 id="SpringMVC"><a href="#SpringMVC" class="headerlink" title="SpringMVC"></a>SpringMVC</h2><ul>
+<li>@RequestParam &amp; @PathVariable 做参数绑定<ul>
+<li>默认绑定<ul>
+<li>请求参数名和方法参数名一致</li>
+</ul>
+</li>
+<li>使用RequestParam明确指定绑定关系<ul>
+<li>@RequestParam(value=”age” required=false)  required默认是true</li>
+</ul>
+</li>
+<li>@PathVariable<ul>
+<li>@RequestMapping(value=”users/{userId}, method=RequestMethod.GET)</li>
+<li>foo(@PathVariable(“userId”) long userId)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>@RequestBody<ul>
+<li>添加 @RequestBody 后 Spring 会根据请求中的 Content-Type 头信息来选择合适的转换器, 将请求数据转为 Java 对象</li>
+<li>比如Content-Type是application/json, 那么就是 JSON -&gt; Model</li>
+</ul>
+</li>
+<li>@ResponseBody<ul>
+<li>添加 @ResponseBody 后 Spring 会根据请求中的 Accept 头信息来选择合适的转换器, Java 对象转化为客户端可接受的表述形式</li>
+<li>比如Accept头部信息包含“application/json”, 就是Model -&gt; JSON</li>
+</ul>
+</li>
+<li>@RestController<ul>
+<li>@RestController 等于 @Controller + 每个方法默认加@ResponseBody</li>
+</ul>
+</li>
+</ul>
+<h2 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h2><ul>
+<li><p>@Data,相当于*<em>@Getter+ @Setter+ toString + EqualsAndHashCode + RequiredArgsConstructor.</em></p>
+</li>
+<li><p>@ <strong>builder</strong> 一个静态内部类<a href="https://juejin.im/post/5cfdf467f265da1b5d579fdd" target="_blank" rel="noopener">https://juejin.im/post/5cfdf467f265da1b5d579fdd</a></p>
+</li>
+<li><p>@EqualsAndHashCode(callSuper = true)</p>
+</li>
+</ul>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
+<li>@Test<ul>
+<li>@Test注解标注这个方法需要测试</li>
+</ul>
+</li>
+<li>@Before<ul>
+<li>所有的测试方法之前都先执行这个方法</li>
+</ul>
+</li>
+<li>@After<ul>
+<li>所有的测试方法之后都要执行这个方法</li>
+</ul>
+</li>
+<li>还有@BeforeClass @AfterClass等注解</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testAdd</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Before</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@After</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://www.cnblogs.com/xrq730/p/5313412.html" target="_blank" rel="noopener">spring注解</a></p>
+<h1 id="提升开发效率的技巧"><a href="#提升开发效率的技巧" class="headerlink" title="提升开发效率的技巧"></a>提升开发效率的技巧</h1><h2 id="idea"><a href="#idea" class="headerlink" title="idea"></a>idea</h2><h3 id="常用快捷键排行榜"><a href="#常用快捷键排行榜" class="headerlink" title="常用快捷键排行榜"></a>常用快捷键排行榜</h3><ol>
+<li>复制一行Ctrl+D  （光标所在行）</li>
+<li>删除一行Ctrl+X （光标所在行）</li>
+<li>选中的代码块注释  Ctrl + Shift + / </li>
+<li>代码重新排列格式 Ctrl + Alt + L</li>
+<li>全局替换 Ctrl+Shift+R</li>
+<li>定位到下一个或上一个错误 F2 / Shift + F2</li>
+<li>Ctrl+Shift+F12 专注代码窗口</li>
+<li>Ctrl+E可以找到Recent Files最近浏览过的文件</li>
+<li>Ctrl + Shift + Z取消撤销 </li>
+<li>Ctrl + Shift +回车：无论光标在哪，跳到下一行</li>
+<li>ctrl+alt+v：自动补全方法/new对象的返回值。</li>
+</ol>
+<h3 id="idea中git的使用"><a href="#idea中git的使用" class="headerlink" title="idea中git的使用"></a>idea中git的使用</h3><p>把idea项目关联为git仓库：菜单-&gt;VCS-&gt;import into Version Control-&gt;Create Git Repository-&gt;e:\project\hiworld-OK</p>
+<h3 id="如何热部署？"><a href="#如何热部署？" class="headerlink" title="如何热部署？"></a>如何热部署？</h3><p> <a href="https://blog.csdn.net/weixin_42831477/article/details/82229436" target="_blank" rel="noopener">热部署</a></p>
+<h4 id="idea如何导入setting？"><a href="#idea如何导入setting？" class="headerlink" title="idea如何导入setting？"></a>idea如何导入setting？</h4><p>file -&gt; export setting</p>
+<p>将会导出一个 setting.jar 的文件</p>
+<p>在新安装 IDEA 的电脑上，在开始的界面选择导入 setting </p>
+<h3 id="查看源码五件套"><a href="#查看源码五件套" class="headerlink" title="查看源码五件套"></a>查看源码五件套</h3><ol>
+<li><p>一次性折叠所有Java方法：ctrl +shift+ 减号</p>
+</li>
+<li><p>ctrl+鼠标单击某类 可以跳进该类查看源码</p>
+</li>
+<li><p>Ctrl+F12 显示这个类的方法的（弹出窗口）</p>
+</li>
+<li><p>alt + 7  显示这个类的方法的（左侧项目文件显示）</p>
+</li>
+<li><p>Ctrl+O，这个用于查看一个类的纲要，再按一次时，列出该类继承的方法及变量。</p>
+</li>
+</ol>
+<p>选中当前类中右击鼠标，右键菜单中选择Diagrams&gt;Show Diagrams，快捷键Ctrl+Alt+Shift+U(不同的系统和快捷键风格快捷键会有差异)。如果是spring的类会出现如图所示的弹框，第一项是类图结构，第二个是spring beans的依赖</p>
+<h2 id="LINUX"><a href="#LINUX" class="headerlink" title="LINUX"></a>LINUX</h2><p>常用命令</p>
+<p><a href="https://www.runoob.com/w3cnote/linux-common-command-2.html" target="_blank" rel="noopener">菜鸟教程常用命令</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">切换目录</span><br><span class="line">cd /usr查看目录下的文件lsls -lh 遍历详细信息，如权限，所属用户，创建日期，大小等等信息</span><br><span class="line">查看当前所处目录pwd</span><br><span class="line">创建目录文件mkdir -p /test/abctouch test.java</span><br><span class="line">删除文件</span><br><span class="line">rm -f test.java</span><br><span class="line">vi abc.txt要进行编辑，要输入 a 或者 i ，才可以进行编辑哦</span><br><span class="line">要退出，首先要离开当前的编辑模式，点击左上角的ESC键，退出编辑模式然后输入冒号 (shift+分号) 打开控制命令接着输入wq，然后敲回车，即保存退出wq 是quit+write的缩写</span><br></pre></td></tr></table></figure>
+<h2 id="云服务器"><a href="#云服务器" class="headerlink" title="云服务器"></a>云服务器</h2><p><a href="https://promotion.aliyun.com/ntms/campus2017.html" target="_blank" rel="noopener">云翼计划,9.9一个月，需要学生认证</a></p>
+<p><a href="http://how2j.cn/k/deploy2linux/deploy2linux-breif/1591.html" target="_blank" rel="noopener">安装常用软件比如java、mysql的步骤</a></p>
+<p><a href="https://blog.csdn.net/M_Kerry/article/details/81664548" target="_blank" rel="noopener">MobaXterm和Navicat，远程连接服务器和数据库，不用每次都登陆阿里云网站，很好用</a></p>
+<h2 id="cmd"><a href="#cmd" class="headerlink" title="cmd"></a>cmd</h2><p>在文件夹空白处按住Shift，然后右键弹出快捷菜单，可以看到“在此处打开命令行窗口”</p>
+<p>使用上下方向键，翻看使用过的命令</p>
+<p>cd   切换目录</p>
+<p>例：cd   // 显示当前目录</p>
+<p>例：cd ..   // 进入父目录</p>
+<p>例：cd /d d:   // 进入上次d盘所在的目录（或在直接输入：d:）</p>
+<p>例：cd /d d:\   // 进入d盘根目录</p>
+<p>例：cd d: // 显示上次d盘所在的目录</p>
+<p>例：cd /d d:\src // 进入d:\src目录</p>
+<p>例：cd prj\src\view  // 进入当前目录下的prj\src\view文件夹</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="Markdown工具"><a href="#Markdown工具" class="headerlink" title="Markdown工具"></a>Markdown工具</h3><p>印象笔记：印象笔记也可以写md，体验一般</p>
+<p>typora ：md文件编辑器，用起来很舒服（本篇就是用它写的）</p>
+<p>Writage 可直接将md文件打开为word，安装轻便。</p>
+<h3 id="资源搜索"><a href="#资源搜索" class="headerlink" title="资源搜索"></a>资源搜索</h3><p>盘搜搜：可以直接搜索网盘分享链接</p>
+<p>闲鱼：盘搜搜搜不到的网盘链接，可以在里搜搜</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="合并多个word-pdf-md文件为一个？"><a href="#合并多个word-pdf-md文件为一个？" class="headerlink" title="合并多个word/pdf/md文件为一个？"></a>合并多个word/pdf/md文件为一个？</h3><p>打开命令行cmd，输入下面这行命令，即可把E:\File目录下所有md文件合并成一个文件。</p>
+<p>输入和输出路径不需要一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type E:\File\*.md &gt;&gt; E:\File\margeFile.md</span><br></pre></td></tr></table></figure>
+<h3 id="端口被占用？"><a href="#端口被占用？" class="headerlink" title="端口被占用？"></a>端口被占用？</h3><p>下面三行代码解决问题</p>
+<p>打开cmd命令行窗口</p>
+<p>第一行代码：查看端口号包含”80”的占用情况</p>
+<p>第二行代码：根据上一步找到的80端口对应的pid是1828</p>
+<p>结束java.exe</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">netstat -ano|findstr &quot;8000&quot;</span><br><span class="line"></span><br><span class="line">tasklist|findstr &quot;4760&quot;</span><br><span class="line"></span><br><span class="line">taskkill /f /t /im java.exe</span><br></pre></td></tr></table></figure>
+<h3 id="md文件转pdf？"><a href="#md文件转pdf？" class="headerlink" title="md文件转pdf？"></a>md文件转pdf？</h3><p>VScode安装插件后可以转。</p>
+<p># </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/01/redis/" rel="next" title="一文掌握redis">
+                <i class="fa fa-chevron-left"></i> 一文掌握redis
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/17/RateLimiter/" rel="prev" title="限流算法及RateLimiter源码解析">
+                限流算法及RateLimiter源码解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="刻羽">
+            
+              <p class="site-author-name" itemprop="name">刻羽</p>
+              <p class="site-description motion-element" itemprop="description">并非因为有了结束， 过程才具有意义。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wangxuanni" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="xiantang.info" title="咸糖" target="_blank">咸糖</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://zmosquito.github.io" title="蚊子" target="_blank">蚊子</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux常用命令"><span class="nav-number">1.</span> <span class="nav-text">Linux常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#grep搜索文本，支持正则"><span class="nav-number">1.0.1.</span> <span class="nav-text">grep搜索文本，支持正则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#less分页查看，比more更强"><span class="nav-number">1.0.2.</span> <span class="nav-text">less分页查看，比more更强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vi编辑文本"><span class="nav-number">1.0.3.</span> <span class="nav-text">vi编辑文本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tail查看文件后面几行，默认尾10行，可实时更新"><span class="nav-number">1.0.4.</span> <span class="nav-text">tail查看文件后面几行，默认尾10行，可实时更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#head查看文件前面几行-默认前10行"><span class="nav-number">1.0.5.</span> <span class="nav-text">head查看文件前面几行,默认前10行;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cat查看文件"><span class="nav-number">1.0.6.</span> <span class="nav-text">cat查看文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sed编辑文件"><span class="nav-number">1.0.7.</span> <span class="nav-text">sed编辑文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见组合使用"><span class="nav-number">1.0.8.</span> <span class="nav-text">常见组合使用</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#Git使用总结"><span class="nav-number">2.</span> <span class="nav-text">Git使用总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#add与commit"><span class="nav-number">2.1.</span> <span class="nav-text">add与commit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#版本"><span class="nav-number">2.2.</span> <span class="nav-text">版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支"><span class="nav-number">2.3.</span> <span class="nav-text">分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支合并"><span class="nav-number">2.4.</span> <span class="nav-text">分支合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stash"><span class="nav-number">2.5.</span> <span class="nav-text">stash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小技巧"><span class="nav-number">2.6.</span> <span class="nav-text">小技巧</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架常用注解"><span class="nav-number">3.</span> <span class="nav-text">框架常用注解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spring"><span class="nav-number">3.1.</span> <span class="nav-text">spring</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bean的注册"><span class="nav-number">3.1.1.</span> <span class="nav-text">bean的注册</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、-Component或其派生-Controller-Service-Repository注解"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">一、@Component或其派生 @Controller, @Service, @Repository注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、使用-Configuration-搭配-Bean注解。"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">二、使用@Configuration 搭配 @Bean注解。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bean的获取"><span class="nav-number">3.1.2.</span> <span class="nav-text">bean的获取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired-required-false-找不到也没关系"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">@Autowired(required = false)找不到也没关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Qualifier-“BMW”-接口有多个实现拿哪一个"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">@Qualifier(“BMW”)接口有多个实现拿哪一个</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bean生命周期"><span class="nav-number">3.2.</span> <span class="nav-text">bean生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scope指定bean的作用域"><span class="nav-number">3.2.1.</span> <span class="nav-text">@Scope指定bean的作用域.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期的钩子"><span class="nav-number">3.2.2.</span> <span class="nav-text">生命周期的钩子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Value去配置文件取值"><span class="nav-number">3.3.</span> <span class="nav-text">@Value去配置文件取值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot"><span class="nav-number">3.4.</span> <span class="nav-text">SpringBoot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringMVC"><span class="nav-number">3.5.</span> <span class="nav-text">SpringMVC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lombok"><span class="nav-number">3.6.</span> <span class="nav-text">Lombok</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">3.7.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#提升开发效率的技巧"><span class="nav-number">4.</span> <span class="nav-text">提升开发效率的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#idea"><span class="nav-number">4.1.</span> <span class="nav-text">idea</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用快捷键排行榜"><span class="nav-number">4.1.1.</span> <span class="nav-text">常用快捷键排行榜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idea中git的使用"><span class="nav-number">4.1.2.</span> <span class="nav-text">idea中git的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何热部署？"><span class="nav-number">4.1.3.</span> <span class="nav-text">如何热部署？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#idea如何导入setting？"><span class="nav-number">4.1.3.1.</span> <span class="nav-text">idea如何导入setting？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看源码五件套"><span class="nav-number">4.1.4.</span> <span class="nav-text">查看源码五件套</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LINUX"><span class="nav-number">4.2.</span> <span class="nav-text">LINUX</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#云服务器"><span class="nav-number">4.3.</span> <span class="nav-text">云服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmd"><span class="nav-number">4.4.</span> <span class="nav-text">cmd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工具"><span class="nav-number">4.5.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Markdown工具"><span class="nav-number">4.5.1.</span> <span class="nav-text">Markdown工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资源搜索"><span class="nav-number">4.5.2.</span> <span class="nav-text">资源搜索</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.6.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#合并多个word-pdf-md文件为一个？"><span class="nav-number">4.6.1.</span> <span class="nav-text">合并多个word/pdf/md文件为一个？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端口被占用？"><span class="nav-number">4.6.2.</span> <span class="nav-text">端口被占用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#md文件转pdf？"><span class="nav-number">4.6.3.</span> <span class="nav-text">md文件转pdf？</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刻羽</span>
+
+  
+</div>
+
+
+  <div class="powered-by">  
+  </div>
+  <span>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
+</div>
+<!-- 
+<div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </footer></div>
+    
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: '8mVebIc8A5BSLnOwM58Kjqnm-gzGzoHsz',
+        appKey: 'gdBaeDvg94MR2FENCtcLLbIf',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，来玩啊!',
+        avatar:'',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":135,"height":150,"hOffset":86,"vOffset":35},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!-- ҳ����С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
