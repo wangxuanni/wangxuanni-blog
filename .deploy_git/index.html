@@ -293,220 +293,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2024/03/26/mybatis-动态代理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="刻羽">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王轩妮">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/03/26/mybatis-动态代理/" itemprop="url">Mybatis原理-动态代理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-26T21:10:50+08:00">
-                2024-03-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/03/26/mybatis-动态代理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/26/mybatis-动态代理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.5k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  7min
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>回想一下咱使用mybatis的时候，只定义了操作表的接口以及方法，并没有定义接口的实现类，一行jdbc代码都没写，就可以对数据库增删查改。哪有什么岁月静好，不过是有人替你负重前行。是勤恳的mybatis帮我们做了实现类，写了jdbc代码，并把mapper里的sql注入进去了。</p>
-<p>梳理一下，框架的使用者需要做的事情包括：</p>
-<ol>
-<li>定义表的接口（如ActorPublicNoticeDAO）。</li>
-<li>定义表接口对应的XML，XML中包含查询SQL所需的参数，如表名、字段名等。</li>
-<li>调用表的接口方法，无需实现接口，直接调用即可。</li>
-</ol>
-<p>框架的做的事包括：</p>
-<ol>
-<li>解析使用者定义的接口和XML配置。</li>
-<li>实现接口方法，在方法内部加入具体的JDBC执行代码，根据XML配置获取参数设置到JDBC执行代码中。</li>
-</ol>
-<p>现在有一个很明显的问题，先现有框架，后有使用者，写框架的时候还不知道有什么接口，怎么写接口的实现类？</p>
-<p>答：其实很简单，不知道有什么接口就约定一个指定路径，路径下的接口都扫描出来。</p>
-<p>那怎么写接口的实现类呢？虽然写框架的时候不知道有什么接口，但是调用的时候就知道了呀。这不由让人想起来一句典型的定义：一种在运行时创建代理对象的机制，而不是在编译时手动编写代理类，这就是<strong>动态代理</strong>技术。</p>
-<p>要使用Java动态代理，需要做以下几个步骤：</p>
-<p>一、创建接口和方法。在这个项目里就是ActorPublicNoticeMapper#getInfoById。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ActorPublicNoticeMapper</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">getInfoById</span><span class="params">(Integer id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>二、使用Proxy.newProxyInstance()方法创建接口的实例（即代理对象）。咱定义一个SqlSession类专门做这件事，你给它一个接口mapper，它给你返回一个mapper实例。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SqlSession</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回代理类</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> clazz</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> dbConfig</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mapperBean</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> : T</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">getMapper</span><span class="params">(Class&lt;T&gt; clazz, DbConfig dbConfig, MapperBean mapperBean)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(clazz.getClassLoader(), <span class="keyword">new</span> Class[]&#123;clazz&#125;, <span class="keyword">new</span> MyInvocationHandler(dbConfig, mapperBean));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>三、创建一个实现InvocationHandler接口的类，调用接口时，实际上是调用InvocationHandler中的invoke()方法。在这个项目里就是MyInvocationHandler。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> DbConfig dbConfig;</span><br><span class="line">    <span class="keyword">private</span> MapperBean mapperBean;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyInvocationHandler</span><span class="params">(<span class="keyword">final</span> DbConfig dbConfig, <span class="keyword">final</span> MapperBean mapperBean)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.dbConfig = dbConfig;</span><br><span class="line">        <span class="keyword">this</span>.mapperBean = mapperBean;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(<span class="keyword">final</span> Object proxy, <span class="keyword">final</span> Method method, <span class="keyword">final</span> Object[] args)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (Connection conn = DriverManager.getConnection(<span class="keyword">this</span>.dbConfig.getUrl(), <span class="keyword">this</span>.dbConfig.getUsername(), <span class="keyword">this</span>.dbConfig.getPassword())) &#123;</span><br><span class="line">            Statement stmt = conn.createStatement();</span><br><span class="line">            Map&lt;String, MySqlFunction&gt; functionMap = <span class="keyword">this</span>.mapperBean.getFunctionMap();</span><br><span class="line">            MySqlFunction mySqlFunction = functionMap.get(method.getName());</span><br><span class="line">            String sql = parseSql(mySqlFunction.getSql(), args);</span><br><span class="line">            ResultSet rs = stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (rs.next())&#123;</span><br><span class="line">                <span class="comment">// 处理结果集</span></span><br><span class="line">                <span class="keyword">return</span> rs.getString(<span class="string">"actorId"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">parseSql</span><span class="params">(String sql, Object[] args)</span> </span>&#123;</span><br><span class="line">				<span class="comment">//do something...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Proxy.newProxyInstance()底层到底做了什么事呢，点进去看看这个方法吧。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">newProxyInstance</span><span class="params">(ClassLoader loader,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        Class&lt;?&gt;[] interfaces,</span></span></span><br><span class="line"><span class="function"><span class="params">                                        InvocationHandler h)</span></span></span><br><span class="line"><span class="function">      <span class="keyword">throws</span> IllegalArgumentException</span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">      Objects.requireNonNull(h);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">final</span> Class&lt;?&gt;[] intfs = interfaces.clone();</span><br><span class="line">      <span class="keyword">final</span> SecurityManager sm = System.getSecurityManager();</span><br><span class="line">      <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">          checkProxyAccess(Reflection.getCallerClass(), loader, intfs);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">       * Look up or generate the designated proxy class.</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">       <span class="comment">//这里生成了一个类</span></span><br><span class="line">      Class&lt;?&gt; cl = getProxyClass0(loader, intfs);</span><br><span class="line"></span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">       * Invoke its constructor with the designated invocation handler.</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">              checkNewProxyPermission(Reflection.getCallerClass(), cl);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">final</span> Constructor&lt;?&gt; cons = cl.getConstructor(constructorParams);</span><br><span class="line">          <span class="keyword">final</span> InvocationHandler ih = h;</span><br><span class="line">          <span class="keyword">if</span> (!Modifier.isPublic(cl.getModifiers())) &#123;</span><br><span class="line">              AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedAction&lt;Void&gt;() &#123;</span><br><span class="line">                  <span class="function"><span class="keyword">public</span> Void <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                      cons.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;);</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="comment">//利用反射生产了这个类的对象</span></span><br><span class="line">          <span class="keyword">return</span> cons.newInstance(<span class="keyword">new</span> Object[]&#123;h&#125;);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
-<p>在编译时不知道类还需要构造一个类的对象好说，用反射生成。那么是怎么生成类的呢。一般的类都是我们编译前就写好的.java文件，jvm把.java文件编译成字节码，并以.class文件存储。而动态代理是在运行时直接生成了.class文件。让我们点进代码一探究竟。</p>
-<p>分别跳入如下方法：</p>
-<p>java.lang.reflect.Proxy#newProxyInstance</p>
-<p>java.lang.reflect.Proxy#getProxyClass0</p>
-<p>java.lang.reflect.WeakCache#get</p>
-<p>这里的代码比较绕，加入了一些缓存相关的处理，我们只需要抓住核心流程。</p>
-<p>java.lang.reflect.Proxy.ProxyClassFactory#apply 这个方法就是动态代理生成字节码的核心代码，可以看到生成一个类，并且生成了3个方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">private static final class ProxyClassFactory</span><br><span class="line">        implements BiFunction&lt;ClassLoader, Class&lt;?&gt;[], Class&lt;?&gt;&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        // prefix for all proxy class names</span><br><span class="line">        private static final String proxyClassNamePrefix = &quot;$Proxy&quot;;</span><br><span class="line"></span><br><span class="line">        // next number to use for generation of unique proxy class names</span><br><span class="line">        private static final AtomicLong nextUniqueNumber = new AtomicLong();</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public Class&lt;?&gt; apply(ClassLoader loader, Class&lt;?&gt;[] interfaces) &#123;</span><br><span class="line"></span><br><span class="line">            Map&lt;Class&lt;?&gt;, Boolean&gt; interfaceSet = new IdentityHashMap&lt;&gt;(interfaces.length);</span><br><span class="line">            for (Class&lt;?&gt; intf : interfaces) &#123;</span><br><span class="line">                /*</span><br><span class="line">                 * Verify that the class loader resolves the name of this</span><br><span class="line">                 * interface to the same Class object.</span><br><span class="line">                 */</span><br><span class="line">                Class&lt;?&gt; interfaceClass = null;</span><br><span class="line">                try &#123;</span><br><span class="line">                    interfaceClass = Class.forName(intf.getName(), false, loader);</span><br><span class="line">                &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">                if (interfaceClass != intf) &#123;</span><br><span class="line">                    throw new IllegalArgumentException(</span><br><span class="line">                        intf + &quot; is not visible from class loader&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">                /*</span><br><span class="line">                 * Verify that the Class object actually represents an</span><br><span class="line">                 * interface.</span><br><span class="line">                 */</span><br><span class="line">                if (!interfaceClass.isInterface()) &#123;</span><br><span class="line">                    throw new IllegalArgumentException(</span><br><span class="line">                        interfaceClass.getName() + &quot; is not an interface&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">                /*</span><br><span class="line">                 * Verify that this interface is not a duplicate.</span><br><span class="line">                 */</span><br><span class="line">                if (interfaceSet.put(interfaceClass, Boolean.TRUE) != null) &#123;</span><br><span class="line">                    throw new IllegalArgumentException(</span><br><span class="line">                        &quot;repeated interface: &quot; + interfaceClass.getName());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            String proxyPkg = null;     // package to define proxy class in</span><br><span class="line">            int accessFlags = Modifier.PUBLIC | Modifier.FINAL;</span><br><span class="line"></span><br><span class="line">            /*</span><br><span class="line">             * Record the package of a non-public proxy interface so that the</span><br><span class="line">             * proxy class will be defined in the same package.  Verify that</span><br><span class="line">             * all non-public proxy interfaces are in the same package.</span><br><span class="line">             */</span><br><span class="line">            for (Class&lt;?&gt; intf : interfaces) &#123;</span><br><span class="line">                int flags = intf.getModifiers();</span><br><span class="line">                if (!Modifier.isPublic(flags)) &#123;</span><br><span class="line">                    accessFlags = Modifier.FINAL;</span><br><span class="line">                    String name = intf.getName();</span><br><span class="line">                    int n = name.lastIndexOf(&apos;.&apos;);</span><br><span class="line">                    String pkg = ((n == -1) ? &quot;&quot; : name.substring(0, n + 1));</span><br><span class="line">                    if (proxyPkg == null) &#123;</span><br><span class="line">                        proxyPkg = pkg;</span><br><span class="line">                    &#125; else if (!pkg.equals(proxyPkg)) &#123;</span><br><span class="line">                        throw new IllegalArgumentException(</span><br><span class="line">                            &quot;non-public interfaces from different packages&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (proxyPkg == null) &#123;</span><br><span class="line">                // if no non-public proxy interfaces, use com.sun.proxy package</span><br><span class="line">                proxyPkg = ReflectUtil.PROXY_PACKAGE + &quot;.&quot;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            /*</span><br><span class="line">             * Choose a name for the proxy class to generate.</span><br><span class="line">             */</span><br><span class="line">            long num = nextUniqueNumber.getAndIncrement();</span><br><span class="line">            String proxyName = proxyPkg + proxyClassNamePrefix + num;</span><br><span class="line"></span><br><span class="line">            /*</span><br><span class="line">             * Generate the specified proxy class.</span><br><span class="line">             */</span><br><span class="line">            byte[] proxyClassFile = ProxyGenerator.generateProxyClass(</span><br><span class="line">                proxyName, interfaces, accessFlags);</span><br><span class="line">            try &#123;</span><br><span class="line">                return defineClass0(loader, proxyName,</span><br><span class="line">                                    proxyClassFile, 0, proxyClassFile.length);</span><br><span class="line">            &#125; catch (ClassFormatError e) &#123;</span><br><span class="line">                /*</span><br><span class="line">                 * A ClassFormatError here means that (barring bugs in the</span><br><span class="line">                 * proxy class generation code) there was some other</span><br><span class="line">                 * invalid aspect of the arguments supplied to the proxy</span><br><span class="line">                 * class creation (such as virtual machine limitations</span><br><span class="line">                 * exceeded).</span><br><span class="line">                 */</span><br><span class="line">                throw new IllegalArgumentException(e.toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2019/04/16/布隆过滤器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -694,7 +480,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2023/10/15/为什么Mysql索引失效？/">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2024/03/26/mybatis-动态代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="刻羽">
@@ -713,7 +499,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2023/10/15/为什么Mysql索引失效？/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2024/03/26/mybatis-动态代理/" itemprop="url">Mybatis原理-动态代理</a></h1>
         
 
         <div class="post-meta">
@@ -725,8 +511,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-10-15T21:13:20+08:00">
-                2023-10-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-26T21:10:50+08:00">
+                2024-03-26
               </time>
             
 
@@ -744,8 +530,173 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2023/10/15/为什么Mysql索引失效？/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2023/10/15/为什么Mysql索引失效？/" itemprop="commentCount"></span>
+                <a href="/2024/03/26/mybatis-动态代理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/26/mybatis-动态代理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7min
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2024/03/26/mybatis-动态代理/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2023/05/26/为什么Mysql索引失效？/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/05/26/为什么Mysql索引失效？/" itemprop="url">Mybatis原理-动态代理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-05-26T21:10:50+08:00">
+                2023-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2023/05/26/为什么Mysql索引失效？/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2023/05/26/为什么Mysql索引失效？/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -805,135 +756,14 @@
 
       
         
-          
-            <h1 id="为什么Mysql索引失效？"><a href="#为什么Mysql索引失效？" class="headerlink" title="为什么Mysql索引失效？"></a>为什么Mysql索引失效？</h1><p>上篇文章，我谈到了一次索引失效导致db打满的简单sql优化，准备写一篇关于索引失效的文章，在我写这篇文章的时候，<a href="https://www.zhihu.com/question/421944348" target="_blank" rel="noopener">在MySQL索引失效原理是什么？</a>问题下看的一个回答教人用口诀记住索引失效的回答：</p>
-<blockquote>
-<p><a href="https://www.zhihu.com/search?q=索引失效&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;answer&quot;%2C&quot;sourceId&quot;%3A2251613556}" target="_blank" rel="noopener">索引失效</a>问题是面试必问问题，因为索引失效的情况比较多，很多同学记不住，面试的时候回答不好。我仔细研究了七七四十七天，设计了一句<a href="https://www.zhihu.com/search?q=七字口诀&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;answer&quot;%2C&quot;sourceId&quot;%3A2251613556}" target="_blank" rel="noopener">七字口诀</a>，记住这句口诀，以后再遇到这个问题就可以拿满分了。</p>
-<p>七字口诀就是：</p>
-<p><strong>模 型 数 空 运 最 快</strong></p>
-<p>口诀字面意思就是，要运送一个<a href="https://www.zhihu.com/search?q=产品模型&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;answer&quot;%2C&quot;sourceId&quot;%3A2251613556}" target="_blank" rel="noopener">产品模型</a>的话，要用空运，不要用陆运和海运，数空运最快。叫做：<a href="https://www.zhihu.com/search?q=模型数&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;answer&quot;%2C&quot;sourceId&quot;%3A2251613556}" target="_blank" rel="noopener">模型数</a>空运最快。</p>
-<p>下面我拆开逐字讲解一下：</p>
-<p><strong>模</strong>：模糊查询的意思。like的模糊查询以%开头，索引失效。</p>
-</blockquote>
-<p>我看到这个答案不禁哑然失笑，这个口诀像老师明天要抽查今天死记硬背的学生用的招数，突击一下面试或许可行。但根据我的经验，更好的方式应该是知道是什么原理导致了这个规则，死记硬背背漏背错一点就差之千里。并且如果条件稍微变换，背的规则就不适用了。让我来逐条解释为什么索引会失效。</p>
-<h2 id="模糊查询中，通配符在最前面时，即LIKE-‘-abc’这样不能命中索引"><a href="#模糊查询中，通配符在最前面时，即LIKE-‘-abc’这样不能命中索引" class="headerlink" title="模糊查询中，通配符在最前面时，即LIKE ‘%abc’这样不能命中索引"></a>模糊查询中，通配符在最前面时，即LIKE ‘%abc’这样不能命中索引</h2><p>索引失效的情况之一：</p>
-<ul>
-<li><p><strong>模糊查询中，通配符在最前面时，即LIKE ‘%abc’这样不能命中索引</strong></p>
-</li>
-<li><p><strong>联合索引中，没有遵循最左匹配原则，联合索引会失效，又称之为最左匹配原则。</strong></p>
-</li>
-<li><p><strong>联合索引中，遇到范围查询时，其后的索引不会被命中。</strong></p>
-</li>
-</ul>
-<p>这几条原理其实是类似的，LIKE ‘%abc’之所以失效，是因为在Mysql为字符串字段索引时，字符串的<strong>字典序</strong>排列的。什么是字典序呢？就是先比较第一个字符谁大，如果第一个字符同样大，再比较第二个字符，依次类推到最后一个字符。当你使用这样LIKE ‘%abc’或者这样的LIKE ‘%abc%’的字符，由于没有第一个字符，Mysql无法根据字典序比较索引去缩小范围，所以索引会失效。</p>
-<p>而之所以联合索引有最左匹配原则，也是因为联合索引的排列规则。联合索引是先按左边第1列排列，如果左边第1列值相同再按左边第2列排列，以此类推。联合索引是在找到第一列的情况下才能找第二列，不能跳过左边的列找下一列。</p>
-<p>所以用联合索引的第一列范围查询可以用到索引吗？第二列、第三列呢？比如建立联合索引id_a_b_c,下列sql那些条件可以走索引</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM testTable WHERE a &gt; &apos;10&apos; AND b &gt; &apos;100&apos;AND c &lt; &apos;20&apos;</span><br></pre></td></tr></table></figure>
-<p>回答是：第一a列可以，后面的都不行。如果知道联合索引的建表原理就很容易知道为什么，因为只有在第一列相同的情况下才能使用第二列，<strong>联合索引是根据第一列排列的，只有第一列能用范围查询</strong>，右边的列都是寄存于左边的列排序的。</p>
-<p>再延伸一个问题，如果第一列使用了精准匹配，第二列的范围查询可以使用到索引吗？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM testTable WHERE a = &apos;10&apos; AND b &gt; &apos;20&apos; AND  c &gt; &apos;100&apos;;</span><br></pre></td></tr></table></figure>
-<p>答案，是可以的，在a列相同的情况下，是根据b列排序的，但在这个sql里c列就不行了</p>
-<p>可见这两个规则都是因为索引排列的原理，换句话说，索引按照一个顺序排列后面使用的时候，也必须按照这个这个排列规律去查询。</p>
-<p>如果死记硬背最左匹配原则，那么条件稍稍变化就无从应对了。</p>
-<h2 id="对列进行函数运算的情况（如-where-md5-password-“xxxx”）"><a href="#对列进行函数运算的情况（如-where-md5-password-“xxxx”）" class="headerlink" title="对列进行函数运算的情况（如 where md5(password) = “xxxx”）"></a>对列进行函数运算的情况（如 where md5(password) = “xxxx”）</h2><p>这个规则解释起来也简单，因为使用函数修饰过的列就不是原本建索引的那个列，值已经发生变化，无法使用索引比较查找了。</p>
-<h2 id="使用了not-in-lt-gt-则不会命中索引。注：-lt-gt-是不等号"><a href="#使用了not-in-lt-gt-则不会命中索引。注：-lt-gt-是不等号" class="headerlink" title="使用了not in, &lt;&gt;,!=则不会命中索引。注：&lt;&gt;是不等号"></a>使用了not in, &lt;&gt;,!=则不会命中索引。注：&lt;&gt;是不等号</h2><p>这是为什么呢，还是那两个字：<strong>成本</strong>。<a href="https://zhuanlan.zhihu.com/p/656972135/preview?comment=0&amp;catalog=0" target="_blank" rel="noopener">上篇关于sql优化的文章</a>提过，<strong>当Mysql发现通过索引扫描的行记录数超过全表的30%时，优化器就会放弃走索引，变成全表扫描。</strong>一般来说，不等于某个值基本等于全表扫描，那还走什么索引。</p>
-<p>这里有一个有意思的问题，如果不等于命中了大部分数据会不会走索引呢？我做了一个实验，表记录总共有150个，a字段只有11个记录是有值的，其他139个都是空字符串。先分析一个不等空的试试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain  SELECT * FROM `TestTable` WHERE `a`!=&apos;&apos;</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>select_type</th>
-<th>table</th>
-<th>partitions</th>
-<th>type</th>
-<th>possible_keys</th>
-<th>Key</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>SIMPLE</td>
-<td>TestTable</td>
-<td>NULL</td>
-<td>range</td>
-<td>idx_a</td>
-<td>idx_a</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>key_len</th>
-<th>Ref</th>
-<th>Row</th>
-<th>Filtered</th>
-<th>Extra</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>258</td>
-<td>NULL</td>
-<td>12</td>
-<td>100</td>
-<td>Using index condition</td>
-</tr>
-</tbody>
-</table>
-<p>可见使用不等于符号在索引可以缩小范围至低于30%的情况下是会走索引的。分析不使用不等于的sql，发现反而会索引失效。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain  SELECT * FROM `ActivityInfo` WHERE `playbackLiveIds`=&apos;&apos;</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>select_type</th>
-<th>table</th>
-<th>partitions</th>
-<th>type</th>
-<th>possible_keys</th>
-<th>Key</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>SIMPLE</td>
-<td>TestTable</td>
-<td>NULL</td>
-<td>ALL</td>
-<td>idx_a</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>key_len</th>
-<th>Ref</th>
-<th>Row</th>
-<th>Filtered</th>
-<th>Extra</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Null</td>
-<td>Null</td>
-<td>150</td>
-<td>92.67</td>
-<td>Using where</td>
-</tr>
-</tbody>
-</table>
-<p><strong>由这个实验，可见即便条件里有不等于符号，但不等于的条件命中了大部分数据，也会走索引。mysql是根据成本决定索引会不会失效的。</strong></p>
-
-          
+          上篇文章，我谈到了一次索引失效导致db打满的简单sql优化，准备写一篇关于索引失效的文章.
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2023/05/26/为什么Mysql索引失效？/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -980,7 +810,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2023/08/18/从一次简单的sql优化看索引为什么会失效/">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2023/05/26/从一次简单的sql优化看索引为什么会失效/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="刻羽">
@@ -999,7 +829,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2023/08/18/从一次简单的sql优化看索引为什么会失效/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2023/05/26/从一次简单的sql优化看索引为什么会失效/" itemprop="url">从一次简单的sql优化看索引为什么会失效</a></h1>
         
 
         <div class="post-meta">
@@ -1011,8 +841,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-08-18T17:47:55+08:00">
-                2023-08-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-05-26T21:10:50+08:00">
+                2023-05-26
               </time>
             
 
@@ -1030,8 +860,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2023/08/18/从一次简单的sql优化看索引为什么会失效/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2023/08/18/从一次简单的sql优化看索引为什么会失效/" itemprop="commentCount"></span>
+                <a href="/2023/05/26/从一次简单的sql优化看索引为什么会失效/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2023/05/26/从一次简单的sql优化看索引为什么会失效/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1091,194 +921,14 @@
 
       
         
-          
-            <h1 id="从一次简单的sql优化看索引为什么会失效"><a href="#从一次简单的sql优化看索引为什么会失效" class="headerlink" title="从一次简单的sql优化看索引为什么会失效"></a>从一次简单的sql优化看索引为什么会失效</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>某日DBA找到我，说某条sql打满了数据库的磁盘。sql如下：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> MaterialInfo</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  (</span><br><span class="line">    mIds &lt;&gt; <span class="string">''</span></span><br><span class="line">    <span class="keyword">and</span> itemIds = <span class="string">''</span></span><br><span class="line">    <span class="keyword">and</span> deleted = <span class="number">0</span></span><br><span class="line">  )</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span></span><br><span class="line">  <span class="keyword">id</span> <span class="keyword">desc</span></span><br><span class="line"><span class="keyword">limit</span></span><br><span class="line">  <span class="number">1000</span></span><br></pre></td></tr></table></figure>
-<p>该表是有联合索引<code>idx_itemIds_mIds</code>，按sql的条件是会走索引的。那到底是什么原因导致全表扫描了。难道是因为mIds使用了不等于这种条件？不对，因为联合索引会先根据最左边的itemIds去匹配。那是因为是itemIds查询空字符，所以没有走索引？这里先留一个悬念。且看我娓娓道来。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>话不多说，我们来分析一下，在sql前加上explain关键字就可以分析该sql的执行计划啦</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> MaterialInfo</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  (</span><br><span class="line">    mIds &lt;&gt; <span class="string">''</span></span><br><span class="line">    <span class="keyword">and</span> itemIds = <span class="string">''</span></span><br><span class="line">    <span class="keyword">and</span> deleted = <span class="number">0</span></span><br><span class="line">  )</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span></span><br><span class="line">  <span class="keyword">id</span> <span class="keyword">desc</span></span><br><span class="line"><span class="keyword">limit</span></span><br><span class="line">  <span class="number">1000</span></span><br></pre></td></tr></table></figure>
-<p>下面是执行计划：</p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>select_type</th>
-<th>table</th>
-<th>partitions</th>
-<th>type</th>
-<th>possible_keys</th>
-<th>Key</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>SIMPLE</td>
-<td>MaterialInfo</td>
-<td>NULL</td>
-<td>Index</td>
-<td>idx_itemIds_mIds</td>
-<td>PROMARRY</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>key_len</th>
-<th>Ref</th>
-<th>Filterd</th>
-<th>Filtered</th>
-<th>Extra</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>8</td>
-<td>NULL</td>
-<td>2000</td>
-<td>4.5</td>
-<td>Using where</td>
-</tr>
-</tbody>
-</table>
-<p>啥？看不懂这一坨是什么？不慌，在简单的单表查询，一般我们只需要关注其中的四个重要字段就可以了。possible_keys是可能用到的索引，key是实际上使用的索引，rows是预估的需要读取的记录条数，filtered是某个表经过搜索条件过滤后剩余记录条数的百分比。</p>
-<p>为什么可能使用到的索引（possible_keys）是联合索引idx_itemIds_mIds，而实际上用的到索引（key）是主键索引呢？possible_keys只是Mysql列出可能用到的索引，实际上用哪个会根据成本具体判断。我查了一下itemIds为空数据占总数据的<strong>3/4</strong>。<strong>当Mysql发现通过索引扫描的行记录数超过全表的30%时，优化器就会放弃走索引，变成全表扫描。</strong>在这个sql里，Mysql分析使用联合索引，发现itemId为空就能查出3/4，就直接放弃了走联合索引idx_itemIds_mIds。</p>
-<h2 id="行动"><a href="#行动" class="headerlink" title="行动"></a>行动</h2><p>我顺着这条sql去找，找到了罪魁祸首——一个定时任务。请看脱敏的代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">MaterialDOExample query = <span class="keyword">new</span> TrafficMaterialDOExample();</span><br><span class="line"></span><br><span class="line">query.createCriteria().andMIdsNotEqualTo(<span class="string">""</span>).andItemIdsEqualTo(<span class="string">""</span>).andDeletedEqualTo(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">query.setOrderByClause(<span class="string">"id desc"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询ItemIds为空，mId为空的记录</span></span><br><span class="line"></span><br><span class="line">List&lt;MaterialDO&gt; materialDOS = materialInfoMapper.selectByExample(query);</span><br><span class="line"></span><br><span class="line">materialDOS.forEach(trafficMaterialDO -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//省略了一部分代码，意图是把记录里的extra解析处理，设置回记录里去</span></span><br><span class="line"></span><br><span class="line">  MaterialDO materialDO = <span class="keyword">new</span> TrafficMaterialDO();</span><br><span class="line"></span><br><span class="line">  materialDO.setId(trafficMaterialDO.getId());</span><br><span class="line"></span><br><span class="line">  materialDO.setItemIds(itemIds);</span><br><span class="line"></span><br><span class="line">  materialInfoMapper.updateByPrimaryKeySelective(materialDO);</span><br><span class="line"></span><br><span class="line">  *logger*.info(<span class="string">"Task success:&#123;&#125;"</span>, materialDO.getId());</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>这个任务简而言之是找到符合条件的记录做加工。具体来说是去找到ItemIds为空，mId不为空的记录做解析，解析完成后再更新到db里去。是有意去这么设置条件的。</p>
-<p><strong>如果意图是定时去扫描并处理表中某字段为空的，应该怎么写比较好呢，其实思路就是，只查增量数据，用其他字段走索引。</strong></p>
-<p>想了两个方法，我后面采用了方法二去优化这个定时任务</p>
-<p>方法一 如果表有插入时间这个字段并且有索引，那么可以走插入时间字段的索引，比如30min执行一次的任务，就查找半小时前~当前时间的所有新增数据有没有需要处理的。</p>
-<p>方法二 如果表没有插入时间这个字段，那么可以走id这个索引。查出当前最大的id，去缓存取出最近一次执行最后id，查出所有&gt;最近一次id并且&lt;当前最大的id的记录,进行处理，完事后将当前最大id更新进缓存。</p>
-<p>经过这次优化，我对索引什么时候会失效的情况产生了兴趣。下一篇文章，我会用原理将清楚各种索引失效的原因。</p>
-<h2 id="总结：为什么索引会失效？"><a href="#总结：为什么索引会失效？" class="headerlink" title="总结：为什么索引会失效？"></a>总结：为什么索引会失效？</h2><p>在我写这篇文章的时候，看到了知乎一个回答教人用口诀记住索引失效的情况：</p>
-<ol>
-<li><p>模糊查询中，通配符在最前面时，即LIKE ‘%abc’这样不能命中索引</p>
-</li>
-<li><p>使用了not in, &lt;&gt;,!=则不会命中索引。注：&lt;&gt;是不等号</p>
-</li>
-<li><p>innoDB引擎下，若使用OR，只有前后两个列都有索引才能命中（执行查询计划，type是index_merge），否则不会使用索引。</p>
-</li>
-<li><p>对列进行函数运算的情况（如 where md5(password) = “xxxx”）</p>
-</li>
-<li><p>联合索引中，遇到范围查询时，其后的索引不会被命中。或者没有遵循最左匹配原则。</p>
-</li>
-</ol>
-<p>我看到这个答案不禁失笑，这个口诀真像老师明天要抽查今天死记硬背的学生用的招数。更好的方式是知道是什么原理导致了这个规则，死记硬背容易忘。并且如果条件稍微变换，背的规则就不适用了。最后让我来逐条解释为什么索引会失效。</p>
-<p>模糊查询中，通配符在最前面时，即LIKE ‘%abc’这样不能命中索引</p>
-<p>联合索引中，遇到范围查询时，其后的索引不会被命中。或者没有遵循最左匹配原则。</p>
-<p>联合索引中，遇到范围查询时，其后的索引不会被命中。或者没有遵循最左匹配原则。</p>
-<p>这两条原理其实是类似的，LIKE ‘%abc’之所以失效，是因为在Mysql为字符串字段索引时，字符串的<strong>字典序</strong>排列的。什么是字典序呢？就是先比较第一个字符谁大，如果第一个字符同样大，再比较第二个字符，依次类推到最后一个字符。当你使用这样LIKE ‘%abc’或者这样的LIKE ‘%abc%’的字符，由于没有第一个字符，Mysql无法根据字典序比较索引去缩小范围，所以索引会失效。</p>
-<p>而之所以联合索引有最左匹配原则，也是因为联合索引的排列规则。联合索引是先按左边第1列排列，如果左边第1列值相同再按左边第2列排列，以此类推。联合索引是在找到第一列的情况下才能找第二列，不能跳过左边的列找下一列。</p>
-<p>所以用联合索引的第一列范围查询可以用到索引吗？第二列、第三列呢？比如建立联合索引id_a_b_c,下列sql那些条件可以走索引</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM testTable WHERE a &gt; &apos;10&apos; AND b &gt; &apos;100&apos;AND c &lt; &apos;20&apos;</span><br></pre></td></tr></table></figure>
-<p>回答是：第一a列可以，后面的都不行。如果知道联合索引的建表原理就很容易知道为什么，因为只有在第一列相同的情况下才能使用第二列，<strong>联合索引是根据第一列排列的，只有第一列能用范围查询</strong>，右边的列都是寄存于左边的列排序的。</p>
-<p>再延伸一个问题，如果第一列使用了精准匹配，第二列的范围查询可以使用到索引吗？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM testTable WHERE a = &apos;10&apos; AND b &gt; &apos;20&apos; AND  c &gt; &apos;100&apos;;</span><br></pre></td></tr></table></figure>
-<p>答案，是可以的，在a列相同的情况下，是根据b列排序的，但在这个sql里c列就不行了</p>
-<p>可见这两个规则都是因为索引排列的原理，换句话说，索引按照一个顺序排列后面使用的时候，也必须按照这个这个排列规律去查询。</p>
-<p>如果死记硬背最左匹配原则，那么条件稍稍变化就无从应对了。</p>
-<p>使用了not in, &lt;&gt;,!=则不会命中索引。注：&lt;&gt;是不等号</p>
-<p>这是为什么呢，还是那两个字<strong>成本</strong>，<strong>当Mysql发现通过索引扫描的行记录数超过全表的30%时，优化器就会放弃走索引，变成全表扫描。</strong>一般来说，不等于某个值基本等于全表扫描，那还走什么索引。</p>
-<p>这里有一个有意思的问题，如果不等于命中了大部分数据会不会走索引呢？我做了一个实验，表记录总共有150个，a字段只有11个记录是有值的，其他139个都是空字符串。先分析一个不等空的试试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain  SELECT * FROM `TestTable` WHERE `a`!=&apos;&apos;</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>select_type</th>
-<th>table</th>
-<th>partitions</th>
-<th>type</th>
-<th>possible_keys</th>
-<th>Key</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>SIMPLE</td>
-<td>TestTable</td>
-<td>NULL</td>
-<td>range</td>
-<td>idx_a</td>
-<td>idx_a</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>key_len</th>
-<th>Ref</th>
-<th>Row</th>
-<th>Filtered</th>
-<th>Extra</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>258</td>
-<td>NULL</td>
-<td>12</td>
-<td>100</td>
-<td>Using index condition</td>
-</tr>
-</tbody>
-</table>
-<p>可见使用不等于符号在索引可以缩小范围至低于30%的情况下是会走索引的。分析不使用不等于的sql，发现反而会索引失效。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain  SELECT * FROM `ActivityInfo` WHERE `playbackLiveIds`=&apos;&apos;</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>select_type</th>
-<th>table</th>
-<th>partitions</th>
-<th>type</th>
-<th>possible_keys</th>
-<th>Key</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>SIMPLE</td>
-<td>TestTable</td>
-<td>NULL</td>
-<td>ALL</td>
-<td>idx_a</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>key_len</th>
-<th>Ref</th>
-<th>Row</th>
-<th>Filtered</th>
-<th>Extra</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Null</td>
-<td>Null</td>
-<td>150</td>
-<td>92.67</td>
-<td>Using where</td>
-</tr>
-</tbody>
-</table>
-<p>对列进行函数运算的情况（如 where md5(password) = “xxxx”）</p>
-<p>这个规则解释起来也简单，因为使用函数修饰过的列就不是原本建索引的那个列，值已经发生变化，无法使用索引比较查找了。</p>
-
-          
+          某日DBA找到我，说某条sql打满了数据库的磁盘。sql如下。。。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2023/05/26/从一次简单的sql优化看索引为什么会失效/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1886,193 +1536,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2022/07/26/英文-redis的zset可以做哪些有趣的事？/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="刻羽">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="王轩妮">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/" itemprop="url">What interesting things can zset for redis do?</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-26T00:24:50+08:00">
-                2022-07-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6min
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          Multidimensional leaderboard and rate Limiting.
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2022/07/26/自英-redis的zset可以做哪些有趣的事？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2210,6 +1673,193 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2022/07/26/自英-redis的zset可以做哪些有趣的事？/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2022/07/26/英文-redis的zset可以做哪些有趣的事？/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/" itemprop="url">What interesting things can zset for redis do?</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-26T00:24:50+08:00">
+                2022-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6min
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          Multidimensional leaderboard and rate Limiting.
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/07/26/英文-redis的zset可以做哪些有趣的事？/">
               阅读全文 &raquo;
             </a>
           </div>

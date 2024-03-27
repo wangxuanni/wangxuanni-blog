@@ -1,8 +1,7 @@
 ---
 title: Mybatis原理-动态代理
 date: 2024-03-26 21:10:50
-categories: 算法
-top: 10
+description: mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。
 ---
 
 
