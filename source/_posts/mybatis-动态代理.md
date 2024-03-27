@@ -175,10 +175,10 @@ java.lang.reflect.Proxy.ProxyClassFactory#apply 这个方法就是动态代理�
 private static final class ProxyClassFactory
         implements BiFunction<ClassLoader, Class<?>[], Class<?>>
     {
-        // prefix for all proxy class names
+        // 所有代理类的前缀都用这个
         private static final String proxyClassNamePrefix = "$Proxy";
 
-        // next number to use for generation of unique proxy class names
+        // 用于生成唯一代理类名的计数
         private static final AtomicLong nextUniqueNumber = new AtomicLong();
 
         @Override
@@ -187,8 +187,7 @@ private static final class ProxyClassFactory
             Map<Class<?>, Boolean> interfaceSet = new IdentityHashMap<>(interfaces.length);
             for (Class<?> intf : interfaces) {
                 /*
-                 * Verify that the class loader resolves the name of this
-                 * interface to the same Class object.
+                 * 验证类加载器是否将此接口的名称解析为同一class对象。
                  */
                 Class<?> interfaceClass = null;
                 try {
@@ -200,15 +199,14 @@ private static final class ProxyClassFactory
                         intf + " is not visible from class loader");
                 }
                 /*
-                 * Verify that the Class object actually represents an
-                 * interface.
+                 * 验证Class对象是否实际表示一个接口。
                  */
                 if (!interfaceClass.isInterface()) {
                     throw new IllegalArgumentException(
                         interfaceClass.getName() + " is not an interface");
                 }
                 /*
-                 * Verify that this interface is not a duplicate.
+                 * 验证此接口不是重复的。
                  */
                 if (interfaceSet.put(interfaceClass, Boolean.TRUE) != null) {
                     throw new IllegalArgumentException(
@@ -220,9 +218,7 @@ private static final class ProxyClassFactory
             int accessFlags = Modifier.PUBLIC | Modifier.FINAL;
 
             /*
-             * Record the package of a non-public proxy interface so that the
-             * proxy class will be defined in the same package.  Verify that
-             * all non-public proxy interfaces are in the same package.
+             * 记录一个非公共代理接口的包，以便在同一个包中定义代理类。还要验证所有非公共代理接口是在同一个包里
              */
             for (Class<?> intf : interfaces) {
                 int flags = intf.getModifiers();
@@ -246,13 +242,13 @@ private static final class ProxyClassFactory
             }
 
             /*
-             * Choose a name for the proxy class to generate.
+             * 选择一个名字用于代理类的生成
              */
             long num = nextUniqueNumber.getAndIncrement();
             String proxyName = proxyPkg + proxyClassNamePrefix + num;
 
             /*
-             * Generate the specified proxy class.
+             * 生成一个特定的代理类
              */
             byte[] proxyClassFile = ProxyGenerator.generateProxyClass(
                 proxyName, interfaces, accessFlags);
@@ -274,6 +270,70 @@ private static final class ProxyClassFactory
 ```
 
 
+
+
+
+
+
+```
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.UndeclaredThrowableException;
+
+public final class ActorPublicNoticeMapper extends Proxy {
+    private static Method m1;
+    private static Method m2;
+    private static Method m0;
+
+    public ActorPublicNoticeMapper(InvocationHandler var1) throws  {
+        super(var1);
+    }
+
+    public final boolean equals(Object var1) throws  {
+        try {
+            return (Boolean)super.h.invoke(this, m1, new Object[]{var1});
+        } catch (RuntimeException | Error var3) {
+            throw var3;
+        } catch (Throwable var4) {
+            throw new UndeclaredThrowableException(var4);
+        }
+    }
+
+    public final String toString() throws  {
+        try {
+            return (String)super.h.invoke(this, m2, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+
+    public final int hashCode() throws  {
+        try {
+            return (Integer)super.h.invoke(this, m0, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+
+    static {
+        try {
+            m1 = Class.forName("java.lang.Object").getMethod("equals", Class.forName("java.lang.Object"));
+            m2 = Class.forName("java.lang.Object").getMethod("toString");
+            m0 = Class.forName("java.lang.Object").getMethod("hashCode");
+        } catch (NoSuchMethodException var2) {
+            throw new NoSuchMethodError(var2.getMessage());
+        } catch (ClassNotFoundException var3) {
+            throw new NoClassDefFoundError(var3.getMessage());
+        }
+    }
+}
+```
 
 
 
