@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://wangxuanni.top/2024/03/27/mybatis-%E5%8A%A8%E6%80%81SQL/</loc>
+    
+    <lastmod>2024-03-31T12:51:08.969Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://wangxuanni.top/2024/03/31/%E6%8E%A2%E7%B4%A2Java%E5%B7%A5%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%A1%86%E6%9E%B6/</loc>
     
-    <lastmod>2024-03-31T12:42:09.096Z</lastmod>
+    <lastmod>2024-03-31T12:43:23.084Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>http://wangxuanni.top/2023/05/26/%E4%B8%BA%E4%BB%80%E4%B9%88Mysql%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%EF%BC%9F/</loc>
     
     <lastmod>2024-03-31T12:33:57.680Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://wangxuanni.top/2024/03/27/mybatis-%E5%8A%A8%E6%80%81SQL/</loc>
-    
-    <lastmod>2024-03-28T10:57:37.855Z</lastmod>
     
   </url>
   
@@ -44,14 +44,14 @@
   </url>
   
   <url>
-    <loc>http://wangxuanni.top/about/index.html</loc>
+    <loc>http://wangxuanni.top/categories/index.html</loc>
     
     <lastmod>2024-03-27T08:52:13.594Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://wangxuanni.top/categories/index.html</loc>
+    <loc>http://wangxuanni.top/about/index.html</loc>
     
     <lastmod>2024-03-27T08:52:13.594Z</lastmod>
     
