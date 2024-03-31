@@ -81,16 +81,19 @@
 
 
 
-<meta name="description" content="并非因为有了结束， 过程才具有意义。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="王轩妮">
-<meta property="og:url" content="http://wangxuanni.top/archives/2023/index.html">
+<meta name="description" content="mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mybatis原理-动态SQL">
+<meta property="og:url" content="http://wangxuanni.top/2024/03/27/mybatis-动态SQL/index.html">
 <meta property="og:site_name" content="王轩妮">
-<meta property="og:description" content="并非因为有了结束， 过程才具有意义。">
+<meta property="og:description" content="mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://wangxuanni.top/2024/03/27/mybatis-动态SQL/source/image/mybatis-动态SQL-1.png">
+<meta property="og:updated_time" content="2024-03-28T10:57:37.855Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="王轩妮">
-<meta name="twitter:description" content="并非因为有了结束， 过程才具有意义。">
+<meta name="twitter:title" content="Mybatis原理-动态SQL">
+<meta name="twitter:description" content="mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。">
+<meta name="twitter:image" content="http://wangxuanni.top/2024/03/27/mybatis-动态SQL/source/image/mybatis-动态SQL-1.png">
 
 
 
@@ -120,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://wangxuanni.top/archives/2023/">
+  <link rel="canonical" href="http://wangxuanni.top/2024/03/27/mybatis-动态SQL/">
 
 
 
 
 
-  <title>归档 | 王轩妮</title>
+  <title>Mybatis原理-动态SQL | 王轩妮</title>
   
 
 
@@ -146,7 +149,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 <a href="https://github.com/wangxuanni"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -278,106 +281,226 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 40 篇日志。 继续努力。
-      </span>
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2024/03/27/mybatis-动态SQL/">
 
-      
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">Mybatis原理-动态SQL</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-27T21:10:50+08:00">
+                2024-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2023">2023</h1>
-          </div>
-        
-        
 
-        
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/03/27/mybatis-动态SQL/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/27/mybatis-动态SQL/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2023/05/26/为什么Mysql索引失效？/" itemprop="url">
+          
+
+          
+            <div class="post-wordcount">
               
-                <span itemprop="name">为什么Mysql索引失效？</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
               
-            </a>
-        
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2023-05-26T21:10:50+08:00" content="2023-05-26">
-          05-26
-        </time>
-      </div>
+              
+                <span class="post-meta-divider">|</span>
+              
 
-    </header>
-  </article>
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7min
+                </span>
+              
+            </div>
+          
 
+          
+              <div class="post-description">
+                  mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。
+              </div>
+          
 
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2023/05/26/从一次简单的sql优化看索引为什么会失效/" itemprop="url">
-              
-                <span itemprop="name">从一次简单的sql优化看索引为什么会失效</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2023-05-26T21:10:50+08:00" content="2023-05-26">
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
+      
+        <p>先不谈mybatis是怎么解析SQL的，我们不妨自己先设计一个SQL解析，最基本的功能是，在解析sql的时候，要把接口参数替换到sql里去。</p>
+<p>sql如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;getInfoById&quot; parameterType=&quot;java.lang.Long&quot;</span><br><span class="line">        resultType=&quot;java.lang.String&quot;&gt;</span><br><span class="line">      SELECT *FROM ActorPublicNotice</span><br><span class="line">      WHERE id=#&#123;id&#125;</span><br><span class="line">      and isDeleted=0</span><br><span class="line">      and status = 1</span><br><span class="line">      limit 1</span><br><span class="line">  &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<p>接口方法定义如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface ActorPublicNoticeMapper &#123;</span><br><span class="line">    String getInfoById(Integer id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了满足参数替换，我写出如下简单的sql解析方法，传入sql语句和参数列表，用正则匹配出所有#{}的占位符，用参数挨个替换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public String parseSql(String sql, Object[] args) &#123;</span><br><span class="line"></span><br><span class="line">     String parsedSql = sql.replaceAll(&quot;\\r?\\n&quot;, &quot;&quot;);</span><br><span class="line">     // 使用正则表达式匹配 #&#123;fieldName&#125; 格式的占位符</span><br><span class="line">     //其中&#123;&#125;里的fieldName会被捕获</span><br><span class="line">     Pattern pattern = Pattern.compile(&quot;#\\&#123;(.*)\\&#125;&quot;);</span><br><span class="line">     Matcher matcher = pattern.matcher(parsedSql);</span><br><span class="line"></span><br><span class="line">     int i = 0;</span><br><span class="line">     // 逐个替换占位符</span><br><span class="line">     while (matcher.find()) &#123;</span><br><span class="line">         //整个#&#123;fieldName&#125;</span><br><span class="line">         String placeholder = matcher.group();</span><br><span class="line"></span><br><span class="line">         Object value = args[i++];</span><br><span class="line">         // 根据值的类型进行处理</span><br><span class="line">         //todo 可增加入参类的映射</span><br><span class="line">         String replacement = &quot;&quot;;</span><br><span class="line">         if (value instanceof String) &#123;</span><br><span class="line">             replacement = &quot;&apos;&quot; + value + &quot;&apos;&quot;;</span><br><span class="line">         &#125; else &#123;</span><br><span class="line">             replacement = value.toString();</span><br><span class="line">         &#125;</span><br><span class="line">         parsedSql = parsedSql.replace(placeholder, replacement);</span><br><span class="line"></span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     return parsedSql;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法但对于一个框架的sql解析来说，用正则匹配的话代码可读性差，且不利于灵活修改。并且如果sql是比较动态的，例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;getInfoById&quot; parameterType=&quot;java.lang.Long&quot;</span><br><span class="line">         resultType=&quot;java.lang.String&quot;&gt;</span><br><span class="line">     SELECT id FROM ActorPublicNotice</span><br><span class="line">     WHERE</span><br><span class="line">     &lt;if test=&quot;1=1&quot;&gt;and isDeleted=1&lt;/if&gt;</span><br><span class="line">     &lt;if test=&quot;2=2&quot;&gt;</span><br><span class="line">         and actorId=0</span><br><span class="line">         &lt;if test=&quot;3=3&quot;&gt;</span><br><span class="line">             and status = 1</span><br><span class="line">         &lt;/if&gt;</span><br><span class="line">     &lt;/if&gt;</span><br><span class="line">     limit 1</span><br><span class="line"> &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<p>要怎么解析呢？结合mybatis的功能，我们的解析还需要实现如下功能：</p>
+<ul>
+<li><strong>动态节点</strong>：动态 SQL 逻辑的节点，如 <code>&lt;if&gt;</code>, <code>&lt;choose&gt;</code>, <code>&lt;where&gt;</code>, <code>&lt;set&gt;</code>, <code>&lt;foreach&gt;</code> 等。比如对于if节点，在拼接sql前会先判断是否满足if节点里的内容。</li>
+<li><strong>动态 SQL 逻辑</strong>：在这些特殊节点中，可以使用 OGNL（Object-Graph Navigation Language）表达式以及条件判断语句来根据不同情况动态生成 SQL 片段。</li>
+<li><strong>SQL 拼接顺序</strong>：MyBatis 会按照 XML 文件中节点的排列顺序来拼接最终的 SQL 语句，考虑到各个节点之间的逻辑关系。</li>
+<li><strong>字段映射</strong>：通过配置 ResultMap，MyBatis 可以将数据库查询结果映射到 Java 实体类的属性上，确保查询结果正确地映射到实体对象中。</li>
+<li><strong>结果集格式转化</strong>：MyBatis 还提供了 TypeHandler 机制，在查询结果映射到 Java 对象时，可以通过自定义 TypeHandler 来实现不同类型之间的转换，从而对结果集进行统一的格式转化。</li>
+</ul>
+<p>一起来看看mybatis是怎么做的吧</p>
+<p>先说结论，mybatis会把每一个xml节点解析成不同的SqlNode，比如<if>就解析成一个IfSqlNode，每一个sqlnode都会有自己的处理方式。全部解析完后，一条sql就是一个树。</if></p>
+<p><img src="source/image/mybatis-动态SQL-1.png" alt="mybatis-动态SQL-1"></p>
+<p>源码解析</p>
+<p>mybatis解析动态SQL主要是parseScriptNode()这个方法，这里以If节点的解析为例，附上源码以及简化后的伪代码进行讲解。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public SqlSource parseScriptNode() &#123;</span><br><span class="line">   List&lt;SqlNode&gt; contents = parseDynamicTags(context);</span><br><span class="line">   MixedSqlNode rootSqlNode = new MixedSqlNode(contents);</span><br><span class="line">   SqlSource sqlSource = null;</span><br><span class="line">   if (isDynamic) &#123;</span><br><span class="line">     sqlSource = new DynamicSqlSource(configuration, rootSqlNode);</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">     sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);</span><br><span class="line">   &#125;</span><br><span class="line">   return sqlSource;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> List&lt;SqlNode&gt; parseDynamicTags(XNode node) &#123;</span><br><span class="line">   List&lt;SqlNode&gt; contents = new ArrayList&lt;SqlNode&gt;();</span><br><span class="line">   NodeList children = node.getNode().getChildNodes();</span><br><span class="line">   for (int i = 0; i &lt; children.getLength(); i++) &#123;</span><br><span class="line">     XNode child = node.newXNode(children.item(i));</span><br><span class="line">     if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) &#123;</span><br><span class="line">       String data = child.getStringBody(&quot;&quot;);</span><br><span class="line">       TextSqlNode textSqlNode = new TextSqlNode(data);</span><br><span class="line">       if (textSqlNode.isDynamic()) &#123;</span><br><span class="line">         contents.add(textSqlNode);</span><br><span class="line">         isDynamic = true;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">         contents.add(new StaticTextSqlNode(data));</span><br><span class="line">       &#125;</span><br><span class="line">     &#125; else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) &#123; // issue #628</span><br><span class="line">       String nodeName = child.getNode().getNodeName();</span><br><span class="line">       NodeHandler handler = nodeHandlers(nodeName);</span><br><span class="line">       if (handler == null) &#123;</span><br><span class="line">         throw new BuilderException(&quot;Unknown element &lt;&quot; + nodeName + &quot;&gt; in SQL statement.&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">       handler.handleNode(child, contents);</span><br><span class="line">       isDynamic = true;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   return contents;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line">  private class IfHandler implements NodeHandler &#123;</span><br><span class="line">   public IfHandler() &#123;</span><br><span class="line">     // Prevent Synthetic Access</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   @Override</span><br><span class="line">   public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) &#123;</span><br><span class="line">     List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span><br><span class="line">     MixedSqlNode mixedSqlNode = new MixedSqlNode(contents);</span><br><span class="line">     String test = nodeToHandle.getStringAttribute(&quot;test&quot;);</span><br><span class="line">     IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);</span><br><span class="line">     targetContents.add(ifSqlNode);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>去掉一些无关的内容改成伪代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SqlNode&gt; parseDynamicTags(XNode node) &#123;</span><br><span class="line">   List&lt;SqlNode&gt; contents = new ArrayList&lt;SqlNode&gt;();</span><br><span class="line">   </span><br><span class="line">   // 遍历所有子节点</span><br><span class="line">   NodeList children = node.getNode().getChildNodes();</span><br><span class="line">   for (int i = 0; i &lt; children.getLength(); i++) &#123;</span><br><span class="line">     XNode child = node.newXNode(children.item(i));</span><br><span class="line">     </span><br><span class="line">     // 如果是文本节点</span><br><span class="line">     if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE) &#123;</span><br><span class="line">     //简单的追加sql</span><br><span class="line">         contents.add(textSqlNode);</span><br><span class="line">     &#125;</span><br><span class="line">     // 如果是动态节点</span><br><span class="line">     else if (child.getNode().getNodeType() == Node.ELEMENT_NODE) &#123;</span><br><span class="line">       // 获取动态节点的处理器</span><br><span class="line">       NodeHandler handler = nodeHandlers(nodeName);</span><br><span class="line">       </span><br><span class="line">       // 用动态节点的处理器去处理，注意这里把父节点传入，用于接收子节点追加sql</span><br><span class="line">       handler.handleNode(child, contents);</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   return contents;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class IfHandler &#123;</span><br><span class="line">  public IfHandler() &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public void handleNode(XNode nodeToHandle, List&lt;SqlNode&gt; targetContents) &#123;</span><br><span class="line">    // 递归去遍历子节点，得到节点拼接的sql的content,</span><br><span class="line">    List&lt;SqlNode&gt; contents = parseDynamicTags(nodeToHandle);</span><br><span class="line">    </span><br><span class="line">    // 把子节点放到新建的if节点里，把if节点放进父节点的content里</span><br><span class="line">    targetContents.add(ifSqlNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在调用方法的时候，到对应的增删查改的方法，调用getBoundSql方法，这个方法会调用SqlNode</p>
+<p>#apply，以IfSqlNode节点为例，在执行的时候加上条件语句的判断</p>
+<p>顺便附上从mybatis启动开始，怎么执行到解析动态sql的，这部分了解即可。</p>
+<p>从最开始讲起，在从mybatis启动开始，会加载xml文件并进行解析。org.apache.ibatis.builder.xml.XMLMapperBuilder#configurationElement</p>
+<p>具体看看下面这行代码对于select|insert|update|delete增删改查节点是怎么解析的</p>
+<p><code>buildStatementFromContext(context.evalNodes(&quot;select|insert|update|delete&quot;));</code></p>
+<p>evalNodes()方法已经对xml进行了解析，把该节点内所有的”&lt;…&gt;“都转化成了XNode，返回一个List<xnode>用于下一步。</xnode></p>
+<p>接着我们跳入org.apache.ibatis.builder.xml.XMLMapperBuilder#buildStatementFromContext</p>
+<p>跳入org.apache.ibatis.builder.xml.XMLMapperBuilder#buildStatementFromContext(java.util.List&lt;org.apache.ibatis.parsing.XNode&gt;, java.lang.String)</p>
+<p>跳入org.apache.ibatis.builder.xml.XMLStatementBuilder#parseStatementNode</p>
+<p>parseStatementNode()方法把增删改查节点还有一些特有的属性，比如parameterType、resultMap、resultSetType、useGeneratedKeys，解析出来的。</p>
+<p>重点代码是下面这行，返回了一个SqlSource。这里的LanguageDriver默认会使用XMLLanguageDriver创建SqlSource（Configuration构造函数中设置）。</p>
+<p><code>SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);</code></p>
+<p>跳入org.apache.ibatis.scripting.xmltags.XMLLanguageDriver#createSqlSource</p>
+<p>跳入org.apache.ibatis.scripting.xmltags.XMLScriptBuilder#parseScriptNode</p>
+<p>到这里，我们就可以不跳来跳去了，慢下来仔细看看动态SQL的实际执行代码。</p>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/03/26/mybatis-动态代理/" rel="next" title="Mybatis原理-动态代理">
+                <i class="fa fa-chevron-left"></i> Mybatis原理-动态代理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -385,6 +508,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -625,6 +755,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
