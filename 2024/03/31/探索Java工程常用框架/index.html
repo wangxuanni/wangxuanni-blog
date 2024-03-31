@@ -81,16 +81,17 @@
 
 
 
-<meta name="description" content="并非因为有了结束， 过程才具有意义。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="王轩妮">
-<meta property="og:url" content="http://wangxuanni.top/archives/page/2/index.html">
+<meta name="description" content="mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探索Java工程常用框架原理">
+<meta property="og:url" content="http://wangxuanni.top/2024/03/31/探索Java工程常用框架/index.html">
 <meta property="og:site_name" content="王轩妮">
-<meta property="og:description" content="并非因为有了结束， 过程才具有意义。">
+<meta property="og:description" content="mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2024-03-31T12:42:09.096Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="王轩妮">
-<meta name="twitter:description" content="并非因为有了结束， 过程才具有意义。">
+<meta name="twitter:title" content="探索Java工程常用框架原理">
+<meta name="twitter:description" content="mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。">
 
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://wangxuanni.top/archives/page/2/">
+  <link rel="canonical" href="http://wangxuanni.top/2024/03/31/探索Java工程常用框架/">
 
 
 
 
 
-  <title>归档 | 王轩妮</title>
+  <title>探索Java工程常用框架原理 | 王轩妮</title>
   
 
 
@@ -146,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 <a href="https://github.com/wangxuanni"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -278,405 +279,196 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 41 篇日志。 继续努力。
-      </span>
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wangxuanni.top/2024/03/31/探索Java工程常用框架/">
 
-      
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刻羽">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="王轩妮">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">探索Java工程常用框架原理</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-31T20:10:50+08:00">
+                2024-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2022">2022</h1>
-          </div>
-        
-        
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/07/07/Raft协议解读与实践/" itemprop="url">
-              
-                <span itemprop="name">Raft协议解读与实践</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2022-07-07T19:12:50+08:00" content="2022-07-07">
-          07-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2021">2021</h1>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/07/02/DDD/" itemprop="url">
-              
-                <span itemprop="name">如何让一个历史包袱重的模块重获新生</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2021-07-02T20:12:50+08:00" content="2021-07-02">
-          07-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/03/31/探索Java工程常用框架/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/31/探索Java工程常用框架/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/06/04/我的编程之路1/" itemprop="url">
-              
-                <span itemprop="name">我的编程之路（一）</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-06-04T08:52:50+08:00" content="2020-06-04">
-          06-04
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/04/17/RateLimiter/" itemprop="url">
-              
-                <span itemprop="name">限流算法及RateLimiter源码解析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-17T21:29:50+08:00" content="2020-04-17">
-          04-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
+          
 
-        
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/11/25/实习笔记——开发技巧/" itemprop="url">
+          
+            <div class="post-wordcount">
               
-                <span itemprop="name">实习笔记——开发技巧</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  207
+                </span>
               
-            </a>
-        
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-11-25T20:09:50+08:00" content="2019-11-25">
-          11-25
-        </time>
-      </div>
+              
+                <span class="post-meta-divider">|</span>
+              
 
-    </header>
-  </article>
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1min
+                </span>
+              
+            </div>
+          
 
+          
+              <div class="post-description">
+                  mybatis最核心的功能解析mapper的xml，生成执行sql代码。这个功能里mybatis最有意思两个亮点：动态代理和动态SQL。
+              </div>
+          
 
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/11/01/redis/" itemprop="url">
-              
-                <span itemprop="name">一文掌握redis</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-11-01T16:36:50+08:00" content="2019-11-01">
-          11-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/10/09/循环依赖/" itemprop="url">
-              
-                <span itemprop="name">Spring怎么解决循环依赖？</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-10-09T08:52:50+08:00" content="2019-10-09">
-          10-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>使用java也4年多了，常用的框架、工具只会用，而原理都不知道实在说不过去。所以我开启了一个系列，把工作中常用的框架全探索一遍，满足自己的好奇心。</p>
+<p>怎么探索呢，我先列出一个框架的功能，按照这个功能自己写一个简易的框架（放在github），先搞懂框架设计者面临什么问题，然后在深入框架的源码去学习。</p>
+<p>所以主要是满足我的好奇心，不是教程，如果我觉得还有疑问会一直往底层看，觉得比较有意思技术点才输出博文，像比较基础的xml解析、反射什么的就不会单拎出来了。</p>
+<p>计划是探索这些框架：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox"> mybatis</li>
+<li style="list-style: none"><input type="checkbox"> springmvc</li>
+<li style="list-style: none"><input type="checkbox"> tomcat</li>
+<li style="list-style: none"><input type="checkbox"> spring</li>
+<li style="list-style: none"><input type="checkbox"> maven</li>
+</ul>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/10/01/synchronized与volatile/" itemprop="url">
-              
-                <span itemprop="name">synchronized与volatile原理解析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-10-01T23:53:50+08:00" content="2019-10-01">
-          10-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/08/25/CAS/" itemprop="url">
-              
-                <span itemprop="name">CAS核心原理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-08-25T20:09:50+08:00" content="2019-08-25">
-          08-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/08/14/AQS/" itemprop="url">
-              
-                <span itemprop="name">AQS源码解析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-08-14T20:09:50+08:00" content="2019-08-14">
-          08-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/03/27/mybatis-动态SQL/" rel="next" title="Mybatis原理-动态SQL">
+                <i class="fa fa-chevron-left"></i> Mybatis原理-动态SQL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/5/">5</a><a class="extend next" rel="next" href="/archives/page/3/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -684,6 +476,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -924,6 +723,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
