@@ -418,7 +418,7 @@
 
   <url>
     <loc>http://wangxuanni.top/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -428,112 +428,112 @@
   
   <url>
     <loc>http://wangxuanni.top/categories/%E5%B9%B6%E5%8F%91/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/java/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
-    <lastmod>2025-10-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://wangxuanni.top/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E7%BF%BB%E8%AF%91/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://wangxuanni.top/categories/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E7%A7%8B%E6%8B%9B/</loc>
-    <lastmod>2025-10-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://wangxuanni.top/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://wangxuanni.top/categories/%E5%B7%A5%E7%A8%8B%E6%8A%80%E5%B7%A7/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <loc>http://wangxuanni.top/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/spring/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://wangxuanni.top/categories/%E5%B7%A5%E7%A8%8B%E6%8A%80%E5%B7%A7/</loc>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/mytomcat/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2025-10-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://wangxuanni.top/categories/redis/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://wangxuanni.top/categories/jvm/</loc>
-    <lastmod>2025-10-09</lastmod>
+    <lastmod>2025-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://wangxuanni.top/categories/redis/</loc>
+    <lastmod>2025-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
